@@ -1,0 +1,56 @@
+/*******************************************************************************
+ +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+-+-+-+-+-+-+-+
+ |F|u|n|c|t|i|o|n|a|l| |V|e|r|i|f|i|c|a|t|i|o|n| |o|f| |H|a|r|d|w|a|r|e|
+ +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+-+-+-+-+-+-+-+
+
+ FILE            svm_dskw_if.sv
+
+ DESCRIPTION     svm_dskw interface
+
+ *******************************************************************************/
+
+`ifndef SVM_DSKW_IF_SV
+ `define SVM_DSKW_IF_SV
+
+interface svm_dskw_if (input clk, logic rst);
+   parameter integer WIDTH = 16;
+   parameter integer ADDRESS  = 4;   		
+   parameter integer C_S00_AXI_DATA_WIDTH	= 32;
+   parameter integer C_S00_AXI_ADDR_WIDTH	= 4;
+   
+
+   logic 	     done_interrupt;
+     // Ports of Axi Slave Bus Interface S00_AXI
+     
+     logic [C_S00_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr = 0;
+     logic [2 : 0] s00_axi_awprot = 0;
+     logic  s00_axi_awvalid = 0;
+     logic  s00_axi_awready;
+     logic [C_S00_AXI_DATA_WIDTH-1 : 0] s00_axi_wdata = 0;
+     logic [(C_S00_AXI_DATA_WIDTH/8)-1 : 0] s00_axi_wstrb = 4'b1111;
+     logic  s00_axi_wvalid = 0;
+     logic  s00_axi_wready;
+     logic [1 : 0] s00_axi_bresp;
+     logic  s00_axi_bvalid;
+     logic  s00_axi_bready = 0;
+     logic [C_S00_AXI_ADDR_WIDTH-1 : 0] s00_axi_araddr = 0;
+     logic [2 : 0] s00_axi_arprot = 0;
+     logic  s00_axi_arvalid = 0;
+     logic  s00_axi_arready;
+     logic [C_S00_AXI_DATA_WIDTH-1 : 0] s00_axi_rdata;
+     logic [1 : 0] s00_axi_rresp;
+     logic  s00_axi_rvalid;
+     logic  s00_axi_rready = 0;
+    //signals for comunicating with BRAM 
+    logic [31:0] axi_address;
+    logic [WIDTH-1 : 0] axi_in_data;
+    logic [WIDTH-1 : 0] axi_out_data;
+    logic               axi_en;
+    logic               axi_we;
+    
+   
+
+endinterface : svm_dskw_if
+
+`endif
+
