@@ -10,6 +10,6 @@
 *******************************************************************************/
 
 `include "tests/test_svm_dskw_base.sv"
-`include "tests/test_svm_dskw_simple.sv"
+//`include "tests/test_svm_dskw_simple.sv"
 `include "tests/test_svm_dskw_simple_2.sv"
 

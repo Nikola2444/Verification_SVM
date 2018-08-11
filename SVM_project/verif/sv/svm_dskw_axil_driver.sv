@@ -30,17 +30,51 @@ class svm_dskw_axil_driver extends uvm_driver#(axil_frame);
    endfunction : connect_phase
 
    task run_phase(uvm_phase phase);
+      @(negedge vif.rst);       
       forever begin
          seq_item_port.get_next_item(req);
          `uvm_info(get_type_name(),
                    $sformatf("Driver sending...\n%s", req.sprint()),
                    UVM_HIGH)
          // do actual driving here
+	 
+	 @(posedge vif.clk)begin//writing using AXIL
+	    if(req.read_write)begin
+	       `uvm_info(get_type_name(),
+			 $sformatf("entered write",),
+			 UVM_HIGH)
+	       vif.s00_axi_awaddr = req.address;
+	       vif.s00_axi_awvalid = req.avalid;
+	       vif.s00_axi_wdata = req.data;
+	       vif.s00_axi_wvalid = req.dvalid;
+	       vif.s00_axi_bready = 1'b1;	       
+	       wait(vif.s00_axi_awready && vif.s00_axi_wready);	       
+	       wait(vif.s00_axi_bvalid);
+	       vif.s00_axi_wdata = 0;
+	       vif.s00_axi_awvalid = 0; 
+	       vif.s00_axi_wvalid = 0;
+               wait(!vif.s00_axi_bvalid);	   
+	       vif.s00_axi_bready = 0;
+	    end // if (req.read_write)
+	    else begin
+	       vif.s00_axi_araddr = req.address;
+               vif.s00_axi_arvalid = req.avalid;
+               vif.s00_axi_rready = req.rready;
+	       wait(vif.s00_axi_arready);
+               wait(vif.s00_axi_rvalid);	           
+	       vif.s00_axi_arvalid = 0;
+               vif.s00_axi_araddr = 0;
+	       wait(!vif.s00_axi_rvalid);
+	       vif.s00_axi_rready = 0;	       
+	    end
+	      
+	 end // @ (posedge vif.s00_axi_aclk)
+	 
+	 //end of driving
          seq_item_port.item_done();
       end
    endtask : run_phase
 
 endclass : svm_dskw_axil_driver
-
 `endif
 

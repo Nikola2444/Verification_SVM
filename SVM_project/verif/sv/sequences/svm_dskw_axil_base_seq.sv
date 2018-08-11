@@ -3,21 +3,21 @@
     |F|u|n|c|t|i|o|n|a|l| |V|e|r|i|f|i|c|a|t|i|o|n| |o|f| |H|a|r|d|w|a|r|e|
     +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+-+-+-+-+-+-+-+
 
-    FILE            calc_base_seq.sv
+    FILE            svm_dskw_axil_base_seq.sv
 
     DESCRIPTION     base sequence; to be extended by all other sequences
 
 *******************************************************************************/
 
-`ifndef CALC_BASE_SEQ_SV
-`define CALC_BASE_SEQ_SV
+`ifndef SVM_DSKW_AXIL_BASE_SEQ_SV
+`define SVM_DSKW_AXIL_BASE_SEQ_SV
 
-class calc_base_seq extends uvm_sequence#(calc_frame);
+class svm_dskw_axil_base_seq extends uvm_sequence#(axil_frame);
 
-    `uvm_object_utils(calc_base_seq)
-    `uvm_declare_p_sequencer(calc_sequencer)
+    `uvm_object_utils(svm_dskw_axil_base_seq)
+    `uvm_declare_p_sequencer(axil_sequencer)
 
-    function new(string name = "calc_base_seq");
+    function new(string name = "svm_dskw_axil_base_seq");
         super.new(name);
     endfunction
 
@@ -35,7 +35,7 @@ class calc_base_seq extends uvm_sequence#(calc_frame);
             phase.drop_objection(this, {"Completed sequence '", get_full_name(), "'"});
     endtask : post_body
 
-endclass : calc_base_seq
+endclass : svm_dskw_axil_base_seq
 
 `endif
 

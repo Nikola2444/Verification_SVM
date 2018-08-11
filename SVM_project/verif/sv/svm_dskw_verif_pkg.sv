@@ -18,12 +18,12 @@ package svm_dskw_verif_pkg;
     `include "uvm_macros.svh"     // Include the UVM macros
 
     `include "svm_dskw_config.sv"
-    `include "seq_items/svm_dskw_frame.sv"
+   // `include "seq_items/svm_dskw_frame.sv"
     `include "seq_items/axil_frame.sv"
     `include "seq_items/axis_frame.sv"
     `include "seq_items/bram_frame.sv"
     `include "seq_items/interrupt_frame.sv"
-    `include "svm_dskw_driver.sv"
+    //`include "svm_dskw_driver.sv"
     `include "svm_dskw_bram_driver.sv"
     `include "svm_dskw_axis_driver.sv"
     `include "svm_dskw_axil_driver.sv"
@@ -31,7 +31,7 @@ package svm_dskw_verif_pkg;
     `include "sequencers/bram_sequencer.sv"
     `include "sequencers/axis_sequencer.sv"
     `include "sequencers/axil_sequencer.sv"
-    `include "svm_dskw_monitor.sv"
+    //`include "svm_dskw_monitor.sv"
     `include "svm_dskw_interrupt_monitor.sv"
     `include "svm_dskw_bram_monitor.sv"
     `include "svm_dskw_axis_monitor.sv"

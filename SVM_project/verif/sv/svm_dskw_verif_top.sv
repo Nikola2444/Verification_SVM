@@ -71,8 +71,8 @@ module svm_dskw_verif_top#();
    // clock and reset init.
    initial begin
       s00_axi_aclk <= 0;
-      s00_axi_aresetn <= 1;
-      #50 s00_axi_aresetn <= 0;
+      s00_axi_aresetn <= 0;
+      #50 s00_axi_aresetn <= 1;
    end
 
    // clock generation

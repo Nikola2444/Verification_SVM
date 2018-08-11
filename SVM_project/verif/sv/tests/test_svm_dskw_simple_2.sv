@@ -16,7 +16,7 @@ class test_svm_dskw_simple_2 extends test_svm_dskw_base;
 
    `uvm_component_utils(test_svm_dskw_simple_2)
 
-   svm_dskw_simple_seq simple_seq;
+   svm_dskw_axil_seq axil_seq;
 
    function new(string name = "test_svm_dskw_simple_2", uvm_component parent = null);
       super.new(name,parent);
@@ -24,17 +24,17 @@ class test_svm_dskw_simple_2 extends test_svm_dskw_base;
    
    function void build_phase(uvm_phase phase);
       super.build_phase(phase);
-      simple_seq = svm_dskw_simple_seq::type_id::create("simple_seq");
+      axil_seq = svm_dskw_axil_seq::type_id::create("axil_seq");
    endfunction : build_phase
 
    task run_phase(uvm_phase phase);
       phase.raise_objection(this);
-      if(cfg.is_axis == WITH_BRAM) begin
-         simple_seq.start(env.bram_axis_agent.bram_seqr);
-	 //simple_seq.start(env.agent.axil_seqr);
+      if(cfg.is_bram == WITH_BRAM) begin
+         //simple_seq.start(env.bram_axis_agent.bram_seqr);
+	 axil_seq.start(env.axil_agent.axil_seqr);
       end
       if(cfg.is_axis == WITH_AXIS) begin
-         simple_seq.start(env.bram_axis_agent.axis_seqr);
+         //simple_seq.start(env.bram_axis_agent.axis_seqr);
 	 //simple_seq.start(env.agent.axil_seqr);
       end
         

@@ -9,5 +9,7 @@
 
 *******************************************************************************/
 
-`include "sequences/svm_dskw_base_seq.sv"
-`include "sequences/svm_dskw_simple_seq.sv"
+//`include "sequences/svm_dskw_base_seq.sv"
+`include "sequences/svm_dskw_axil_base_seq.sv"
+//`include "sequences/svm_dskw_simple_seq.sv"
+`include "sequences/svm_dskw_axil_seq.sv"
