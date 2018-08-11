@@ -12,7 +12,7 @@
 `ifndef SVM_DSKW_SEQUENCER_SV
 `define SVM_DSKW_SEQUENCER_SV
 
-class svm_dskw_sequencer extends uvm_sequencer#(axil_frame);
+class svm_dskw_sequencer extends uvm_sequencer#(svm_dskw_frame);
 
     `uvm_component_utils(svm_dskw_sequencer)
 

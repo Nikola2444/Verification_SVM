@@ -27,7 +27,7 @@ package svm_dskw_verif_pkg;
     `include "svm_dskw_bram_driver.sv"
     `include "svm_dskw_axis_driver.sv"
     `include "svm_dskw_axil_driver.sv"
-    `include "svm_dskw_sequencer.sv"
+    //`include "svm_dskw_sequencer.sv"
     `include "sequencers/bram_sequencer.sv"
     `include "sequencers/axis_sequencer.sv"
     `include "sequencers/axil_sequencer.sv"
