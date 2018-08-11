@@ -3,24 +3,26 @@
     |F|u|n|c|t|i|o|n|a|l| |V|e|r|i|f|i|c|a|t|i|o|n| |o|f| |H|a|r|d|w|a|r|e|
     +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+-+-+-+-+-+-+-+
 
-    FILE            calc_sequencer.sv
+    FILE            bram_frame.sv
 
     DESCRIPTION     
 
 *******************************************************************************/
 
-`ifndef CALC_SEQUENCER_SV
-`define CALC_SEQUENCER_SV
+`ifndef BRAM_FRAME_SV
+`define BRAM_FRAME_SV
+parameter integer WIDTH = 16;
+class bram_frame extends uvm_sequence_item;
+   logic [31:0] 			  address;
+   logic [WIDTH-1 : 0] 			  in_data;
+    `uvm_object_utils_begin(bram_frame)   
+    `uvm_object_utils_end
 
-class calc_sequencer extends uvm_sequencer#(calc_frame);
+    function new(string name = "bram_frame");
+        super.new(name);
+    endfunction 
 
-    `uvm_component_utils(calc_sequencer)
-
-    function new(string name = "calc_sequencer", uvm_component parent = null);
-        super.new(name,parent);
-    endfunction
-
-endclass : calc_sequencer
+endclass : bram_frame
 
 `endif
 

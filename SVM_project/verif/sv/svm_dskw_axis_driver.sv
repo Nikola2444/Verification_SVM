@@ -9,23 +9,23 @@
 
 *******************************************************************************/
 
-`ifndef SVM_DSKW_DRIVER_SV
-`define SVM_DSKW_DRIVER_SV
+`ifndef SVM_DSKW_AXIS_DRIVER_SV
+`define SVM_DSKW_AXIS_DRIVER_SV
 
-class svm_dskw_driver extends uvm_driver#(svm_dskw_frame);
+class svm_dskw_axis_driver extends uvm_driver#(axis_frame);
 
-    `uvm_component_utils(svm_dskw_driver)
+    `uvm_component_utils(svm_dskw_axis_driver)
 
     // The virtual interface used to drive and view HDL signals.
-    virtual interface dskw_if vif;
+    virtual interface axis_if vif;
 
-    function new(string name = "svm_dskw_driver", uvm_component parent = null);
+    function new(string name = "svm_dskw_axis_driver", uvm_component parent = null);
         super.new(name,parent);
     endfunction
 
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
-        if (!uvm_config_db#(virtual dskw_if)::get(this, "*", "dskw_if", vif))
+        if (!uvm_config_db#(virtual axis_if)::get(this, "*", "axis_if", vif))
             `uvm_fatal("NOVIF",{"virtual interface must be set for: ",get_full_name(),".vif"})
     endfunction : connect_phase
 
@@ -40,7 +40,7 @@ class svm_dskw_driver extends uvm_driver#(svm_dskw_frame);
         end
     endtask : run_phase
 
-endclass : svm_dskw_driver
+endclass : svm_dskw_axis_driver
 
 `endif
 

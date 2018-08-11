@@ -9,18 +9,18 @@
 
 *******************************************************************************/
 
-`ifndef SVM_DSKW_SEQUENCER_SV
-`define SVM_DSKW_SEQUENCER_SV
+`ifndef BRAM_SEQUENCER_SV
+`define BEAM_SEQUENCER_SV
 
-class svm_dskw_sequencer extends uvm_sequencer#(axil_frame);
+class bram_sequencer extends uvm_sequencer#(bram_frame);
 
-    `uvm_component_utils(svm_dskw_sequencer)
+    `uvm_component_utils(bram_sequencer)
 
-    function new(string name = "svm_dskw_sequencer", uvm_component parent = null);
+    function new(string name = "bram_sequencer", uvm_component parent = null);
         super.new(name,parent);
     endfunction
 
-endclass : svm_dskw_sequencer
+endclass : bram_sequencer
 
 `endif
 

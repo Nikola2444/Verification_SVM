@@ -3,29 +3,24 @@
     |F|u|n|c|t|i|o|n|a|l| |V|e|r|i|f|i|c|a|t|i|o|n| |o|f| |H|a|r|d|w|a|r|e|
     +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+-+-+-+-+-+-+-+
 
-    FILE            calc_config.sv
+    FILE            svm_dskw_sequencer.sv
 
     DESCRIPTION     
 
 *******************************************************************************/
 
-`ifndef CALC_CONFIG_SV
-`define CALC_CONFIG_SV
+`ifndef AXIL_SEQUENCER_SV
+`define AXIL_SEQUENCER_SV
 
-class calc_config extends uvm_object;
+class axil_sequencer extends uvm_sequencer#(axil_frame);
 
-    uvm_active_passive_enum is_active = UVM_ACTIVE;
+    `uvm_component_utils(axil_sequencer)
 
-    `uvm_object_utils_begin (calc_config)
-        `uvm_field_enum(uvm_active_passive_enum, is_active, UVM_DEFAULT)
-    `uvm_object_utils_end
-
-    function new(string name = "calc_config");
-        super.new(name);
+    function new(string name = "axil_sequencer", uvm_component parent = null);
+        super.new(name,parent);
     endfunction
 
-endclass : calc_config
+endclass : axil_sequencer
 
 `endif
-
 

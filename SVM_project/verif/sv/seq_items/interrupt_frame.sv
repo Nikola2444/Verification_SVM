@@ -3,24 +3,24 @@
     |F|u|n|c|t|i|o|n|a|l| |V|e|r|i|f|i|c|a|t|i|o|n| |o|f| |H|a|r|d|w|a|r|e|
     +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+-+-+-+-+-+-+-+
 
-    FILE            svm_dskw_sequencer.sv
+    FILE            interrupt_frame.sv
 
     DESCRIPTION     
 
 *******************************************************************************/
 
-`ifndef SVM_DSKW_SEQUENCER_SV
-`define SVM_DSKW_SEQUENCER_SV
+`ifndef INTERRUPT_FRAME_SV
+`define INTERRUPT_FRAME_SV
 
-class svm_dskw_sequencer extends uvm_sequencer#(axil_frame);
+class interrupt_frame extends uvm_sequence_item;
+    `uvm_object_utils_begin(interrupt_frame)   
+    `uvm_object_utils_end
 
-    `uvm_component_utils(svm_dskw_sequencer)
+    function new(string name = "interrupt_frame");
+        super.new(name);
+    endfunction 
 
-    function new(string name = "svm_dskw_sequencer", uvm_component parent = null);
-        super.new(name,parent);
-    endfunction
-
-endclass : svm_dskw_sequencer
+endclass : interrupt_frame
 
 `endif
 

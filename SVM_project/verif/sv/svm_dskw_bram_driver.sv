@@ -3,29 +3,29 @@
     |F|u|n|c|t|i|o|n|a|l| |V|e|r|i|f|i|c|a|t|i|o|n| |o|f| |H|a|r|d|w|a|r|e|
     +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+-+-+-+-+ +-+-+ +-+-+-+-+-+-+-+-+
 
-    FILE            calc_driver.sv
+    FILE            svm_dskw_bram_driver.sv
 
     DESCRIPTION     
 
 *******************************************************************************/
 
-`ifndef CALC_DRIVER_SV
-`define CALC_DRIVER_SV
+`ifndef SVM_DSKW_BRAM_DRIVER_SV
+`define SVM_DSKW_BRAM_DRIVER_SV
 
-class calc_driver extends uvm_driver#(calc_frame);
+class svm_dskw_bram_driver extends uvm_driver#(bram_frame);
 
-    `uvm_component_utils(calc_driver)
+    `uvm_component_utils(svm_dskw_bram_driver)
 
     // The virtual interface used to drive and view HDL signals.
-    virtual interface calc_if vif;
+    virtual interface bram_if vif;
 
-    function new(string name = "calc_driver", uvm_component parent = null);
+    function new(string name = "svm_dskw_bram_driver", uvm_component parent = null);
         super.new(name,parent);
     endfunction
 
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
-        if (!uvm_config_db#(virtual calc_if)::get(this, "*", "calc_if", vif))
+        if (!uvm_config_db#(virtual bram_if)::get(this, "*", "bram_if", vif))
             `uvm_fatal("NOVIF",{"virtual interface must be set for: ",get_full_name(),".vif"})
     endfunction : connect_phase
 
@@ -40,7 +40,7 @@ class calc_driver extends uvm_driver#(calc_frame);
         end
     endtask : run_phase
 
-endclass : calc_driver
+endclass : svm_dskw_bram_driver
 
 `endif
 
