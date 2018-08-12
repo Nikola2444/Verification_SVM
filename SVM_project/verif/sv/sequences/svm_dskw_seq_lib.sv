@@ -11,5 +11,9 @@
 
 //`include "sequences/svm_dskw_base_seq.sv"
 `include "sequences/svm_dskw_axil_base_seq.sv"
+`include "sequences/svm_dskw_axis_base_seq.sv"
+`include "sequences/svm_dskw_bram_base_seq.sv"
 //`include "sequences/svm_dskw_simple_seq.sv"
 `include "sequences/svm_dskw_axil_seq.sv"
+`include "sequences/svm_dskw_axis_seq.sv"
+`include "sequences/svm_dskw_bram_seq.sv"

@@ -22,6 +22,8 @@ class axil_frame extends uvm_sequence_item;
    rand bit dvalid;
    rand bit rready;   
    rand bit read_write;
+
+   //constraint address_constraint{address inside {0,4};};
    
    
    `uvm_object_utils_begin(axil_frame)
