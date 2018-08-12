@@ -24,10 +24,10 @@ class svm_dskw_axil_seq extends svm_dskw_axil_base_seq;
         // axil example - just send one item
        repeat(2)begin
 	  if(i == 1)begin
-	    `uvm_do_with(req, {req.address == 0;req.dvalid==1;req.avalid == 1; req.read_write ==i;req.data ==1;req.rready == 1;});
+	     `uvm_do_with(req, {req.dvalid==1;req.avalid == 1; req.read_write ==i;req.rready == 1;req.data == 1; req.address == 0;});
 	  end
 	  else begin
-	    `uvm_do_with(req, {req.address == 4 ;req.dvalid==1;req.avalid == 1; req.read_write ==i;req.data ==1;req.rready == 1;});
+	     `uvm_do_with(req, {req.dvalid==1;req.avalid == 1; req.read_write ==0;req.rready == 1;req.address == 4;});
 	  end
 	  i--;	  
        end

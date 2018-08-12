@@ -30,7 +30,7 @@ module svm_dskw_verif_top#();
    
    // DUT
    Deskew_axi_v1_0 #(.WIDTH(16),
-                     .ADDRESS(4))
+                     .ADDRESS(1))
    Deskew_Axi(.s00_axi_aclk(s00_axi_aclk),
               .s00_axi_aresetn(s00_axi_aresetn),
               .s00_axi_awaddr(axil_vif.s00_axi_awaddr),

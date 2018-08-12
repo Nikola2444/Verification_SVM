@@ -21,7 +21,7 @@ class svm_dskw_config extends uvm_object;
    `uvm_object_utils_begin (svm_dskw_config)
       `uvm_field_enum(uvm_active_passive_enum, is_active, UVM_DEFAULT)
       `uvm_field_enum(axis_cfg,  is_axis, WITHOUT_AXIS);
-      `uvm_field_enum(bram_cfg,  is_bram, WITH _BRAM);
+      `uvm_field_enum(bram_cfg,  is_bram, WITH_BRAM);
       
    `uvm_object_utils_end
 

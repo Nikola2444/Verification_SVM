@@ -35,8 +35,8 @@ class test_svm_dskw_simple_2 extends test_svm_dskw_base;
    task run_phase(uvm_phase phase);
       phase.raise_objection(this);
       if(cfg.is_bram == WITH_BRAM) begin
-         bram_seq.start(env.bram_axis_agent.bram_seqr);
 	 axil_seq.start(env.axil_agent.axil_seqr);
+	 bram_seq.start(env.bram_axis_agent.bram_seqr);         
       end
       if(cfg.is_axis == WITH_AXIS) begin
          axis_seq.start(env.bram_axis_agent.axis_seqr);

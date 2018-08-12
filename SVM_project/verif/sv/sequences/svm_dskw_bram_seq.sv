@@ -20,7 +20,18 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
     endfunction
 
     virtual task body();
-        // bram example - just send one item
+       req = bram_frame::type_id::create("req");
+       read_deskew_images();
+       forever begin
+	  start_item(req); // adresa je ogranicena na validan opseg
+	  `uvm_info(get_type_name(),
+		    $sformatf("req.address isL %b", req.address),
+		    UVM_HIGH)
+	  req.in_data = images_queue[req.address];	  
+	  finish_item(req);
+
+	  
+       end
     endtask : body 
 
 endclass : svm_dskw_bram_seq

@@ -34,7 +34,8 @@ class axil_frame extends uvm_sequence_item;
       `uvm_field_int(rready, UVM_ALL_ON)
       `uvm_field_int(read_write, UVM_ALL_ON)
    `uvm_object_utils_end
-
+   constraint address_constraint {address inside {0, 4};}
+   constraint data_constraint {data <= 1;}
    function new(string name = "axil_frame");
       super.new(name);
    endfunction 
