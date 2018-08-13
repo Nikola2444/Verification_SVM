@@ -15,7 +15,7 @@
 class interrupt_frame extends uvm_sequence_item;
     `uvm_object_utils_begin(interrupt_frame)   
     `uvm_object_utils_end
-
+    
     function new(string name = "interrupt_frame");
         super.new(name);
     endfunction 

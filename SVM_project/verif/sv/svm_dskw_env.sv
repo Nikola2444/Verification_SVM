@@ -40,12 +40,15 @@ class svm_dskw_env extends uvm_env;
       super.connect_phase(phase);
       if(cfg.is_bram == WITH_BRAM)begin
 	 bram_axis_agent.bram_mon.item_collected_port.connect(scbd.port_bram);
+	 interrupt_agent.interrupt_mon.item_collected_port.connect(bram_axis_agent.bram_drv.port_interrupt_done);
       end
       if (cfg.is_axis == WITH_AXIS)begin
+	 interrupt_agent.interrupt_mon.item_collected_port.connect(bram_axis_agent.axis_drv.port_interrupt_done);
 	 bram_axis_agent.axis_mon.item_collected_port.connect(scbd.port_axis);
       end
       axil_agent.axil_mon.item_collected_port.connect(scbd.port_axil);
-      interrupt_agent.interrupt_mon.item_collected_port.connect(scbd.port_interrupt);      
+      interrupt_agent.interrupt_mon.item_collected_port.connect(scbd.port_interrupt);
+      
    endfunction : connect_phase
 
 endclass : svm_dskw_env

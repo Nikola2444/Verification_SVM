@@ -15,6 +15,7 @@ parameter integer WIDTH = 16;
 class bram_frame extends uvm_sequence_item;
    logic [31:0] 			  address;
    logic [WIDTH-1 : 0] 			  in_data;
+   logic 				  interrupt = 0;
     `uvm_object_utils_begin(bram_frame)   
     `uvm_object_utils_end
 

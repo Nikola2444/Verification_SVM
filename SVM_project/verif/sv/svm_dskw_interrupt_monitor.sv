@@ -46,14 +46,22 @@ class svm_dskw_interrupt_monitor extends uvm_monitor;
    endfunction : connect_phase
 
    task run_phase(uvm_phase phase);
-      // forever begin
-      // current_frame = svm_dskw_frame::type_id::create("current_frame", this);
-      // ...
-      // collect transactions
-      // ...
-      // item_collected_port.write(current_frame);
-      // end
-   endtask : run_phase
+      forever begin
+	 current_frame = interrupt_frame::type_id::create("current_frame", this);
+	 // ...
+	 // collect transactions
+	 // ...
+	 @(posedge vif.clk)begin
+	    if(vif.done_interrupt)begin
+	       `uvm_info(get_type_name(),
+			 $sformatf("INTERRUPT HAPPENED"),
+			 UVM_HIGH)
+	       
+	      item_collected_port.write(current_frame);
+	    end
+	 end
+      end
+      endtask : run_phase
 
 endclass : svm_dskw_interrupt_monitor
 

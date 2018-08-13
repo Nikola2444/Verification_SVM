@@ -39,14 +39,14 @@ class svm_dskw_axil_driver extends uvm_driver#(axil_frame);
          // do actual driving here
 	 
 	 @(posedge vif.clk)begin//writing using AXIL
-	    if(req.read_write)begin
+	    if(req.read_write)begin//read = 0, write = 1
 	       `uvm_info(get_type_name(),
 			 $sformatf("entered write",),
 			 UVM_HIGH)
 	       vif.s00_axi_awaddr = req.address;
-	       vif.s00_axi_awvalid = req.avalid;
+	       vif.s00_axi_awvalid = 1;
 	       vif.s00_axi_wdata = req.data;
-	       vif.s00_axi_wvalid = req.dvalid;
+	       vif.s00_axi_wvalid = 1;
 	       vif.s00_axi_bready = 1'b1;	       
 	       wait(vif.s00_axi_awready && vif.s00_axi_wready);	       
 	       wait(vif.s00_axi_bvalid);
@@ -58,8 +58,8 @@ class svm_dskw_axil_driver extends uvm_driver#(axil_frame);
 	    end // if (req.read_write)
 	    else begin
 	       vif.s00_axi_araddr = req.address;
-               vif.s00_axi_arvalid = req.avalid;
-               vif.s00_axi_rready = req.rready;
+               vif.s00_axi_arvalid = 1;
+               vif.s00_axi_rready = 1;
 	       wait(vif.s00_axi_arready);
                wait(vif.s00_axi_rvalid);	           
 	       vif.s00_axi_arvalid = 0;
