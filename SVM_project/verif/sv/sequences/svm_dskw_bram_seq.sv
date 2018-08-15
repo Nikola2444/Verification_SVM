@@ -22,8 +22,8 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
 
    virtual task body();
       read_deskew_images();
-      req = bram_frame::type_id::create("req");
-      start_item(req);
+      //req = bram_frame::type_id::create("req");
+      /*start_item(req);
       `uvm_info(get_type_name(),
 		$sformatf("start_item"),	       
 		UVM_HIGH)
@@ -33,10 +33,12 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
 		UVM_HIGH)
       `uvm_info(get_type_name(),
 		$sformatf("DUMMY seq passed"),
-		UVM_HIGH)
-      
+		UVM_HIGH)*/
+      req = bram_frame::type_id::create("req");
       forever begin
-	 start_item(req); 
+	 
+	 start_item(req);
+	 finish_item(req);
 	 if(image < num_of_images)begin
 	    if(req.interrupt)begin
 	       req.interrupt = 0;
@@ -51,6 +53,7 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
 	 end
 	 else
 	   break;
+	 start_item(req); 
 	 finish_item(req);
       end
    endtask : body 

@@ -31,34 +31,39 @@ class svm_dskw_bram_driver extends uvm_driver#(bram_frame);
    endfunction : connect_phase
 
    task run_phase(uvm_phase phase);
-      seq_item_port.get_next_item(req);
+      /*seq_item_port.get_next_item(req);
       `uvm_info(get_type_name(),
 		$sformatf("get_next_item"),	       
 		UVM_HIGH)
       seq_item_port.item_done();
       `uvm_info(get_type_name(),
 		$sformatf("item_done"),	       
-		UVM_HIGH)
+		UVM_HIGH)*/
       //req = bram_frame::type_id::create("req");
       forever begin
 	 @(posedge vif.clk)begin	   
 	    if(interrupt_done == 1)begin
 	       interrupt_done = 0;	       
-	       req.interrupt = 1;	       
-	       seq_item_port.get_next_item(req);
-	       seq_item_port.item_done();
+	       req.interrupt = 1;       
+	       //seq_item_port.get_next_item(req);
+	       //seq_item_port.item_done();
 	       continue;
 	    end
-	    if(vif.axi_en)begin
+	    @(posedge vif.axi_en)begin
 	       if(vif.axi_address < 784)begin
-		  req.address = vif.axi_address;
+		  
+		  seq_item_port.get_next_item(req);
 		  `uvm_info(get_type_name(),
-		   $sformatf("req.address isL %b", req.address),
-		   UVM_HIGH)
+			    $sformatf("req.address isL %b", vif.axi_address),
+			    UVM_HIGH)
+		  req.address = vif.axi_address;
+		  
+		  seq_item_port.item_done();
+
 		  seq_item_port.get_next_item(req);	   
 		  `uvm_info(get_type_name(),
 			    $sformatf("Driver sending...\n%s", req.sprint()),
-			    UVM_FULL)
+			    UVM_HIGH)
 		  vif.axi_in_data = req.in_data;	   
 		  // do actual driving here
 		  seq_item_port.item_done();

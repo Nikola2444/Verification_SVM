@@ -22,7 +22,7 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
    bit coverage_enable = 1;
 
    // This TLM port is used to connect the scoreboard to the monitor
-   uvm_analysis_imp_bram#(bram_frame, svm_dskw_scoreboard) port_bram;
+   uvm_analysis_imp_bram#(image_transaction, svm_dskw_scoreboard) port_bram;
    uvm_analysis_imp_axis#(axis_frame, svm_dskw_scoreboard) port_axis;
    uvm_analysis_imp_axil#(axil_frame, svm_dskw_scoreboard) port_axil;
    uvm_analysis_imp_interrupt#(interrupt_frame, svm_dskw_scoreboard) port_interrupt;
@@ -42,23 +42,27 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
       port_interrupt = new("port_interrupt", this);
    endfunction : new
 
-   function write_bram (bram_frame tr);
-      bram_frame tr_clone;
-      $cast(tr_clone, tr.clone()); 
+   function write_bram (image_transaction tr);
+      image_transaction tr_clone;
+      if(!$cast(tr_clone, tr.clone()))//clone is implemented in image_transaction class
+	`uvm_error(get_type_name(), $sformatf("INVALID CAST"))
+      
       if(checks_enable) begin
-         // do actual checking here
-         // ...
-         // ++num_of_tr;
+	 if(!tr_clone.image_deskewed)begin
+	    //deskew_reference_model(tr_clone);	    
+	 end
       end
+      else begin
+	 `uvm_info(get_type_name(),$sformatf("----------------------IMAGE WRITEN -----------------------------------"),UVM_MEDIUM)
+      end
+
    endfunction : write_bram
 
    function write_axis (axis_frame tr);
       axis_frame tr_clone;
       $cast(tr_clone, tr.clone()); 
       if(checks_enable) begin
-	 // do actual checking here
-	 // ...
-	 // ++num_of_tr;
+	 
       end
    endfunction : write_axis
 

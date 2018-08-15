@@ -23,6 +23,7 @@ package svm_dskw_verif_pkg;
     `include "seq_items/axis_frame.sv"
     `include "seq_items/bram_frame.sv"
     `include "seq_items/interrupt_frame.sv"
+    `include "seq_items/image_transaction.sv"
     //`include "svm_dskw_driver.sv"
     `include "svm_dskw_bram_driver.sv"
     `include "svm_dskw_axis_driver.sv"

@@ -161,8 +161,7 @@ module Deskew#
            state_next = i2_1;
         end
         i2_1:begin
-           address = (x_reg + y_reg*28) * ADDRESS;
-           en = 1;
+           
            M_next[2] = in_data + M_reg[2];//m00
            M_next[0] = in_data * x_reg + M_reg[0];//m10
            M_next[1] = in_data * y_reg + M_reg[1];//m01
@@ -199,8 +198,6 @@ module Deskew#
            state_next = i5_1;              
         end
         i5_1:begin
-           address = (x_reg + y_reg*28) * ADDRESS;
-           en = 1;
            mu02_next = in_data * temp1_reg[41:14] + (mu02_reg);
            mu11_next = $signed(in_data)*$signed(temp2_reg[41:14]) + $signed(mu11_reg);
            y_next = y_reg + 1;
@@ -234,7 +231,7 @@ module Deskew#
               M_next[1] = temp1[41:14];//14*mu11/mu02
            end
            else begin
-              M_next[0] =   {temp1_reg[18:0],9'b0};//-mu11/mu02
+              M_next[0] =   {temp1_reg[18:0],9'b0};//mu11/mu02
               M_next[1] = - temp1[41:14];//14*mu11/mu02
            end
            x_next = 0;    
@@ -270,22 +267,13 @@ module Deskew#
            state_next = i8_3;              
         end
         i8_3:begin
-           address = (x1_reg[18:14] + y2_reg[18:14] * 28) * ADDRESS ;
-           en = 1;
-           R2_next = ({26'b0, in_data,14'b0}) - (($signed(xp_reg[41:14]) - $signed(x1_reg)) * in_data);           
-           
-           state_next = i8_33;
-        end
-        i8_33:begin
-            address = (x2_reg[18:14] + y2_reg[18:14] * 28) * ADDRESS ;
-            en = 1;
-            state_next = i8_4;
+           R2_next = ({26'b0, in_data,14'b0}) - (($signed(xp_reg[41:14]) - $signed(x1_reg)) * in_data);  
+           address = (x2_reg[18:14] + y2_reg[18:14] * 28) * ADDRESS ;
+           en = 1;           
+           state_next = i8_4;
         end
         i8_4:begin
-            address = (x2_reg[18:14] + y2_reg[18:14] * 28) * ADDRESS ;
-            en = 1;
             R2_next = R2_reg + ($signed(xp_reg[41:14]) - $signed(x1_reg)) * in_data;
-            
             state_next = i8_5;              
         end
         
