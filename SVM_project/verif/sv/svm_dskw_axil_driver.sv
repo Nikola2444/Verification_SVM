@@ -35,14 +35,11 @@ class svm_dskw_axil_driver extends uvm_driver#(axil_frame);
          seq_item_port.get_next_item(req);
          `uvm_info(get_type_name(),
                    $sformatf("Driver sending...\n%s", req.sprint()),
-                   UVM_HIGH)
+                   UVM_FULL)
          // do actual driving here
 	 
 	 @(posedge vif.clk)begin//writing using AXIL
 	    if(req.read_write)begin//read = 0, write = 1
-	       `uvm_info(get_type_name(),
-			 $sformatf("entered write",),
-			 UVM_HIGH)
 	       vif.s00_axi_awaddr = req.address;
 	       vif.s00_axi_awvalid = 1;
 	       vif.s00_axi_wdata = req.data;

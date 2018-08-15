@@ -26,10 +26,10 @@ class svm_dskw_bram_monitor extends uvm_monitor;
    `uvm_component_utils_end
 
    // The virtual interface used to drive and view HDL signals.
-   virtual interface bram_if vif;//only use sugnals for bram communication!!!!
+   virtual interface bram_if vif;
 
    // current transaction
-   bram_frame current_frame;//here you will need dskw_frame insteade of svm_dskw_frame
+   bram_frame current_frame;
 
    // coverage can go here
    // ...
@@ -46,13 +46,17 @@ class svm_dskw_bram_monitor extends uvm_monitor;
    endfunction : connect_phase
 
    task run_phase(uvm_phase phase);
-      // forever begin
-      // current_frame = svm_dskw_frame::type_id::create("current_frame", this);
-      // ...
-      // collect transactions
-      // ...
-      // item_collected_port.write(current_frame);
-      // end
+/*      forever begin
+	 current_frame = bram_frame::type_id::create("current_frame", this);
+	 // ...
+	 // collect transactions
+	 @(posedge vif.clk)begin
+	    if(vif.en)begin
+	       item_collected_port.write(current_frame);
+	    end
+	 end
+	 // item_collected_port.write(current_frame);
+      end*/
    endtask : run_phase
 
 endclass : svm_dskw_bram_monitor

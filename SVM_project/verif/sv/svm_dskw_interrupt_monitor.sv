@@ -55,13 +55,13 @@ class svm_dskw_interrupt_monitor extends uvm_monitor;
 	    if(vif.done_interrupt)begin
 	       `uvm_info(get_type_name(),
 			 $sformatf("INTERRUPT HAPPENED"),
-			 UVM_HIGH)
+			 UVM_FULL)
 	       
-	      item_collected_port.write(current_frame);
+	       item_collected_port.write(current_frame);
 	    end
 	 end
       end
-      endtask : run_phase
+   endtask : run_phase
 
 endclass : svm_dskw_interrupt_monitor
 

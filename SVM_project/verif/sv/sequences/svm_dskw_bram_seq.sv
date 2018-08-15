@@ -21,22 +21,32 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
    endfunction
 
    virtual task body();
+      read_deskew_images();
       req = bram_frame::type_id::create("req");
       start_item(req);
-      finish_item(req);       
-      read_deskew_images();
+      `uvm_info(get_type_name(),
+		$sformatf("start_item"),	       
+		UVM_HIGH)
+      finish_item(req);
+      `uvm_info(get_type_name(),
+		$sformatf("finish_item"),	       
+		UVM_HIGH)
+      `uvm_info(get_type_name(),
+		$sformatf("DUMMY seq passed"),
+		UVM_HIGH)
+      
       forever begin
-	 start_item(req); // adresa je ogranicena na validan opseg
+	 start_item(req); 
 	 if(image < num_of_images)begin
 	    if(req.interrupt)begin
 	       req.interrupt = 0;
 	       image ++;	       	       
 	    end
 	    else begin
-	    `uvm_info(get_type_name(),
-		      $sformatf("req.address isL %b", req.address),
-		      UVM_HIGH)
-	    req.in_data = images_queue[image * 784 + req.address];
+	       `uvm_info(get_type_name(),
+			 $sformatf("req.address isL %b", req.address),
+			 UVM_HIGH)
+	       req.in_data = images_queue[image * 784 + req.address];
 	    end
 	 end
 	 else
