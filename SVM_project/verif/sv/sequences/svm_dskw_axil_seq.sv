@@ -22,15 +22,9 @@ class svm_dskw_axil_seq extends svm_dskw_axil_base_seq;
 
     virtual task body();
         // axil example - just send one item\
-       repeat(2)begin
-	  if(i == 1)begin
-	     `uvm_do_with(req, {req.read_write ==i;req.data == 1; req.address == 0;});
-	  end
-	  else begin
-	     `uvm_do_with(req, {req.read_write ==0; req.address == 4;});
-	  end
-	  i--;	  
-       end
+       	  
+       `uvm_do_with(req, {req.read_write ==1; req.data == 1; req.address == 0;});
+       `uvm_do_with(req, {req.read_write ==1; req.data == 0; req.address == 0;});
     endtask : body 
 
 endclass : svm_dskw_axil_seq

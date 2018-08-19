@@ -61,6 +61,7 @@ module svm_dskw_verif_top#();
               .done_interrupt(interrupt_vif.done_interrupt)
               );
    initial begin
+      set_global_timeout(0.1ms/1ps);
       uvm_config_db#(virtual axil_if)::set(null, "*", "axil_if", axil_vif);
       uvm_config_db#(virtual bram_if)::set(null, "*", "bram_if", bram_vif);
       uvm_config_db#(virtual axis_if)::set(null, "*", "axis_if", axis_vif);
@@ -70,6 +71,7 @@ module svm_dskw_verif_top#();
 
    // clock and reset init.
    initial begin
+
       s00_axi_aclk <= 0;
       s00_axi_aresetn <= 0;
       #50 s00_axi_aresetn <= 1;

@@ -33,21 +33,30 @@ class test_svm_dskw_simple_2 extends test_svm_dskw_base;
    endfunction : build_phase
 
    task run_phase(uvm_phase phase);
-      phase.raise_objection(this);
+//      phase.raise_objection(this);
       if(cfg.is_bram == WITH_BRAM) begin
-	 fork 
-	    axil_seq.start(env.axil_agent.axil_seqr);
-	    bram_seq.start(env.bram_axis_agent.bram_seqr);
+	 fork
+	    begin
+	       `uvm_info(get_type_name(),$sformatf("AXIL OBJECTION RAISED"),UVM_LOW)
+	       phase.raise_objection(this);
+	       axil_seq.start(env.axil_agent.axil_seqr);
+	       phase.drop_objection(this);
+	       `uvm_info(get_type_name(),$sformatf("AXIL OBJECTION DROPED"),UVM_LOW)
+	    end
+	    begin
+	       bram_seq.set_starting_phase(phase);
+	       bram_seq.start(env.bram_axis_agent.bram_seqr);
+	    end
 	 join
       end
       if(cfg.is_axis == WITH_AXIS) begin
 	 fork
-         axis_seq.start(env.bram_axis_agent.axis_seqr);
-	 axil_seq.start(env.axil_agent.axil_seqr);
+            axis_seq.start(env.bram_axis_agent.axis_seqr);
+	    axil_seq.start(env.axil_agent.axil_seqr);
 	 join
       end
         
-      phase.drop_objection(this);
+//      phase.drop_objection(this);
    endtask : run_phase
 
 endclass : test_svm_dskw_simple_2

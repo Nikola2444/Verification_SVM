@@ -13,8 +13,7 @@
 `define IMAGE_TRANSACTION_SV
 
 class image_transaction extends uvm_sequence_item;
-   logic [31:0]   image_for_dskw[784];
-   logic [31:0]   deskewed_image[784];
+   logic [31:0]   image[784];
    bit 		  image_deskewed;
    
     `uvm_object_utils_begin(image_transaction)   
@@ -25,8 +24,7 @@ class image_transaction extends uvm_sequence_item;
     endfunction 
    function void copy(image_transaction tr);
       super.copy(tr);      
-      this.image_for_dskw = tr.image_for_dskw;
-      this.deskewed_image = tr.deskewed_image;
+      this.image = tr.image;
       this.image_deskewed = tr.image_deskewed;      
    endfunction
 

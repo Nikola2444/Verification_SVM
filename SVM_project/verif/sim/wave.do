@@ -23,6 +23,11 @@ add wave -noupdate /svm_dskw_verif_top/interrupt_vif/done_interrupt
 add wave -noupdate -radix decimal /svm_dskw_verif_top/bram_vif/axi_address
 add wave -noupdate /svm_dskw_verif_top/bram_vif/axi_out_data
 add wave -noupdate /svm_dskw_verif_top/bram_vif/axi_in_data
+add wave -noupdate /svm_dskw_verif_top/Deskew_Axi/Deskew/M_reg
+add wave -noupdate /svm_dskw_verif_top/Deskew_Axi/Deskew/state
+add wave -noupdate /svm_dskw_verif_top/Deskew_Axi/Deskew/mu11_reg
+add wave -noupdate /svm_dskw_verif_top/Deskew_Axi/Deskew/mu02_reg
+add wave -noupdate /svm_dskw_verif_top/Deskew_Axi/Deskew/R2_reg
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {845 ps} 0}
 configure wave -namecolwidth 301
@@ -39,4 +44,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {212 ps} {4166 ps}
+WaveRestoreZoom {0 ps} {1012224 ps}

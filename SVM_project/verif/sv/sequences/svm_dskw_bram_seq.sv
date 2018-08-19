@@ -21,6 +21,9 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
    endfunction
 
    virtual task body();
+      uvm_phase p;
+      
+
       read_deskew_images();
       //req = bram_frame::type_id::create("req");
       /*start_item(req);
@@ -35,10 +38,17 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
 		$sformatf("DUMMY seq passed"),
 		UVM_HIGH)*/
       req = bram_frame::type_id::create("req");
+      
       forever begin
-	 
-	 start_item(req);
+
+	 start_item(req);	 
+	 p = get_starting_phase();
+	 if(p) 
+	   p.raise_objection(this);
+	 //`uvm_info(get_type_name(),$sformatf("OBJECTION RAISED"),UVM_LOW)
+//	 `uvm_info(get_type_name(),$sformatf("DRIVER 2"),UVM_LOW)
 	 finish_item(req);
+//	 `uvm_info(get_type_name(),$sformatf("DRIVER 5"),UVM_LOW)
 	 if(image < num_of_images)begin
 	    if(req.interrupt)begin
 	       req.interrupt = 0;
@@ -51,11 +61,21 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
 	       req.in_data = images_queue[image * 784 + req.address];
 	    end
 	 end
-	 else
+	 else begin
+	   if(p)
+	     p.drop_objection(this);
 	   break;
-	 start_item(req); 
+	 end
+	 start_item(req);
+	 
+//	 `uvm_info(get_type_name(),$sformatf("DRIVER 6"),UVM_LOW)
 	 finish_item(req);
-      end
+	 if(p)
+	   p.drop_objection(this);
+	 //`uvm_info(get_type_name(),$sformatf("OBJECTION DROPED"),UVM_LOW)
+//	 `uvm_info(get_type_name(),$sformatf("DRIVER 9"),UVM_LOW)
+      end // forever begin
+      
    endtask : body 
 
 endclass : svm_dskw_bram_seq

@@ -19,7 +19,8 @@ class svm_dskw_bram_monitor extends uvm_monitor;
    bit coverage_enable = 1;
    int pixel_for_dskw = 0;
    int deskewed_pixel = 0;
-   int address = 0;   
+   int address = 0;
+   logic [31 : 0] in_data;   
    uvm_analysis_port #(image_transaction) item_collected_port;
 
    `uvm_component_utils_begin(svm_dskw_bram_monitor)
@@ -50,14 +51,17 @@ class svm_dskw_bram_monitor extends uvm_monitor;
    task run_phase(uvm_phase phase);
       //fork
       current_frame = image_transaction::type_id::create("current_frame", this);
+      #0;      
+      `uvm_info(get_type_name(),$sformatf("MONITOR BEGAN") ,UVM_LOW)      
       forever begin
-
+	 #0;      
 	 // ...
 	 // collect transactions
 	 @(posedge vif.clk)begin
 	    
 	    @(negedge vif.axi_en)begin
-               if(pixel_for_dskw == 784)begin
+	       if(pixel_for_dskw == 784)begin
+		  
 		  current_frame.image_deskewed = 0;
 		  //`uvm_info(get_type_name(),$sformatf("vif_axi_in_data in bram_monitor is: %h", vif.axi_in_data),UVM_MEDIUM)
 		  pixel_for_dskw ++;
@@ -65,34 +69,39 @@ class svm_dskw_bram_monitor extends uvm_monitor;
 		  current_frame = image_transaction::type_id::create("current_frame", this);
 	       end
 	       else begin
+
 		  if(pixel_for_dskw < 784 && address < 784)begin
-		     current_frame.image_for_dskw[address] = vif.axi_in_data;
-		     //`uvm_info(get_type_name(),$sformatf("image_for_dksw[%d]: %h ", pixel_for_dskw, current_frame.image_for_dskw[address]),UVM_LOW) 
+		     #1;		     		     
+		     current_frame.image[address] =  vif.axi_in_data;		     
+	//	     `uvm_info(get_type_name(),$sformatf("image_for_dksw[%d]: %h ", address, vif.axi_in_data),UVM_LOW) 
 		     pixel_for_dskw ++;
-		  end		     
-	       end
+		  end
+
+	       end // else: !if(pixel_for_dskw == 784)
+	       
 	    end
 	    @(posedge vif.axi_en)begin
-	       address = vif.axi_address;	    
+	       address = vif.axi_address;   
+	       //address = vif.axi_address;	    
 	       if(vif.axi_we == 4'b0011)begin
+		  if(deskewed_pixel < 784) begin
+		     deskewed_pixel ++;			     
+		     current_frame.image[address-784] = vif.axi_out_data;
+		    // `uvm_info(get_type_name(), $sformatf("deskew[%d]: %h",address - 784, current_frame.image[address-784] ), UVM_LOW);
+//		     if(address == 784 || address == 1567)
+//		       `uvm_info(get_type_name(), $sformatf("address is: %d \t axi_data:%h",address - 784, vif.axi_out_data ), UVM_LOW);
+
+		  end
 		  if(deskewed_pixel == 784)begin
 		     pixel_for_dskw = 0;
 		     deskewed_pixel = 0;
 		     current_frame.image_deskewed = 1;
 		     item_collected_port.write(current_frame);
-		     //`uvm_info(get_type_name(),$sformatf("---------------IMAGE DESKEWED--------------------------------------"),UVM_MEDIUM)
+		     `uvm_info(get_type_name(),$sformatf("---------------IMAGE DESKEWED--------------------------------------"),UVM_LOW)
 		     current_frame = image_transaction::type_id::create("current_frame", this);
-		  end
-		  else begin
-		     deskewed_pixel ++;	
-		     if(deskewed_pixel == 783)
-		       deskewed_pixel ++;		     
-		     current_frame.deskewed_image[address] = vif.axi_out_data;
-		     
-		  end
-		  
+		  end		  		  		  
 	       end // if (vif.axi_we == 4'b0011)
-	    end // if (vif.axi_en == 1)	       
+	    end // @(posedge vif.axi_en)	    
 	 end // @ (posedge vif.clk)	    
       end // forever begin
       

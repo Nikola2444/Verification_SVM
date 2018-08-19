@@ -28,6 +28,6 @@ vlog -sv \
     ../sv/svm_dskw_verif_top.sv
 
 # run simulation
-vsim svm_dskw_verif_top -novopt +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_MEDIUM -sv_seed random -do "run -all"
+vsim svm_dskw_verif_top -novopt +UVM_TIMEOUT=200 +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_LOW  -sv_seed random -do "run -all"
 
 do wave.do
