@@ -22,17 +22,21 @@ class image_transaction extends uvm_sequence_item;
     function new(string name = "image_transaction");
         super.new(name);
     endfunction 
-   function void copy(image_transaction tr);
-      super.copy(tr);      
+
+
+   function void do_copy(uvm_object  rhs);
+      image_transaction tr;      
+      super.do_copy(rhs);      
+      $cast(tr,rhs);
       this.image = tr.image;
       this.image_deskewed = tr.image_deskewed;      
-   endfunction
+   endfunction // copy
+   
 
-   function image_transaction clone ();
-      clone = new();      
-      clone.copy(this);
-      return clone;
-   endfunction : clone
+//   function uvm_object uvm_object::clone ();
+  //    super.clone();      
+      //clone = new();      
+//   endfunction : clone
 endclass : image_transaction
 
 `endif

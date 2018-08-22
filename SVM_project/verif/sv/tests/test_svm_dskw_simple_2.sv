@@ -30,33 +30,26 @@ class test_svm_dskw_simple_2 extends test_svm_dskw_base;
       axil_seq = svm_dskw_axil_seq::type_id::create("axil_seq");
       axis_seq = svm_dskw_axis_seq::type_id::create("axis_seq");
       bram_seq = svm_dskw_bram_seq::type_id::create("bram_seq");
+
    endfunction : build_phase
 
    task run_phase(uvm_phase phase);
-//      phase.raise_objection(this);
+      phase.raise_objection(this);
+      phase.phase_done.set_drain_time(this, 1000);
       if(cfg.is_bram == WITH_BRAM) begin
-	 fork
-	    begin
-	       `uvm_info(get_type_name(),$sformatf("AXIL OBJECTION RAISED"),UVM_LOW)
-	       phase.raise_objection(this);
-	       axil_seq.start(env.axil_agent.axil_seqr);
-	       phase.drop_objection(this);
-	       `uvm_info(get_type_name(),$sformatf("AXIL OBJECTION DROPED"),UVM_LOW)
-	    end
-	    begin
-	       bram_seq.set_starting_phase(phase);
-	       bram_seq.start(env.bram_axis_agent.bram_seqr);
-	    end
-	 join
+	      fork
+	         axil_seq.start(env.axil_agent.axil_seqr);	         	            
+	         bram_seq.start(env.bram_axis_agent.bram_seqr);	         
+	      join
       end
       if(cfg.is_axis == WITH_AXIS) begin
-	 fork
+	      fork
             axis_seq.start(env.bram_axis_agent.axis_seqr);
-	    axil_seq.start(env.axil_agent.axil_seqr);
-	 join
+	         axil_seq.start(env.axil_agent.axil_seqr);
+	      join
       end
-        
-//      phase.drop_objection(this);
+      
+      phase.drop_objection(this);
    endtask : run_phase
 
 endclass : test_svm_dskw_simple_2

@@ -19,6 +19,7 @@ class svm_dskw_env extends uvm_env;
    svm_dskw_interrupt_agent interrupt_agent;   
    svm_dskw_scoreboard scbd;
    svm_dskw_config cfg;
+   svm_dskw_coverage_collector coverage_collector;
    
    `uvm_component_utils (svm_dskw_env)
 
@@ -32,6 +33,7 @@ class svm_dskw_env extends uvm_env;
       axil_agent = svm_dskw_axil_agent::type_id::create("axil_agent", this);
       interrupt_agent = svm_dskw_interrupt_agent::type_id::create("interrupt_agent", this);
       scbd = svm_dskw_scoreboard::type_id::create("scbd", this);
+      coverage_collector = svm_dskw_coverage_collector::type_id::create("coverage_collector", this);
       if(!uvm_config_db#(svm_dskw_config)::get(this, "", "svm_dskw_config", cfg))
         `uvm_fatal("NOCONFIG",{"Config object must be set for: ",get_full_name(),".cfg"})
    endfunction : build_phase
@@ -39,12 +41,13 @@ class svm_dskw_env extends uvm_env;
    function void connect_phase(uvm_phase phase);
       super.connect_phase(phase);
       if(cfg.is_bram == WITH_BRAM)begin
-	 bram_axis_agent.bram_mon.item_collected_port.connect(scbd.port_bram);
-	 interrupt_agent.interrupt_mon.item_collected_port.connect(bram_axis_agent.bram_drv.port_interrupt_done);
+	      bram_axis_agent.bram_mon.item_collected_port.connect(scbd.port_bram);
+	      interrupt_agent.interrupt_mon.item_collected_port.connect(bram_axis_agent.bram_drv.port_interrupt_done);
+         axil_agent.axil_mon.item_collected_port.connect(coverage_collector.port_coverage_axil);
       end
       if (cfg.is_axis == WITH_AXIS)begin
-	 interrupt_agent.interrupt_mon.item_collected_port.connect(bram_axis_agent.axis_drv.port_interrupt_done);
-	 bram_axis_agent.axis_mon.item_collected_port.connect(scbd.port_axis);
+	      interrupt_agent.interrupt_mon.item_collected_port.connect(bram_axis_agent.axis_drv.port_interrupt_done);
+	      bram_axis_agent.axis_mon.item_collected_port.connect(scbd.port_axis);
       end
       axil_agent.axil_mon.item_collected_port.connect(scbd.port_axil);
       interrupt_agent.interrupt_mon.item_collected_port.connect(scbd.port_interrupt);

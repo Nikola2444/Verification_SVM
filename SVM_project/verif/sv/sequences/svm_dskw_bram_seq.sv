@@ -20,60 +20,34 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
       super.new(name);
    endfunction
 
-   virtual task body();
-      uvm_phase p;
-      
-
+   virtual task body();     
       read_deskew_images();
-      //req = bram_frame::type_id::create("req");
-      /*start_item(req);
-      `uvm_info(get_type_name(),
-		$sformatf("start_item"),	       
-		UVM_HIGH)
-      finish_item(req);
-      `uvm_info(get_type_name(),
-		$sformatf("finish_item"),	       
-		UVM_HIGH)
-      `uvm_info(get_type_name(),
-		$sformatf("DUMMY seq passed"),
-		UVM_HIGH)*/
-      req = bram_frame::type_id::create("req");
       
+      req = bram_frame::type_id::create("req");
+
       forever begin
 
-	 start_item(req);	 
-	 p = get_starting_phase();
-	 if(p) 
-	   p.raise_objection(this);
-	 //`uvm_info(get_type_name(),$sformatf("OBJECTION RAISED"),UVM_LOW)
-//	 `uvm_info(get_type_name(),$sformatf("DRIVER 2"),UVM_LOW)
-	 finish_item(req);
-//	 `uvm_info(get_type_name(),$sformatf("DRIVER 5"),UVM_LOW)
-	 if(image < num_of_images)begin
-	    if(req.interrupt)begin
-	       req.interrupt = 0;
-	       image ++;	       	       
-	    end
-	    else begin
-	       `uvm_info(get_type_name(),
-			 $sformatf("req.address isL %b", req.address),
-			 UVM_HIGH)
-	       req.in_data = images_queue[image * 784 + req.address];
-	    end
-	 end
-	 else begin
-	   if(p)
-	     p.drop_objection(this);
-	   break;
-	 end
-	 start_item(req);
-	 
-//	 `uvm_info(get_type_name(),$sformatf("DRIVER 6"),UVM_LOW)
-	 finish_item(req);
-	 if(p)
-	   p.drop_objection(this);
-	 //`uvm_info(get_type_name(),$sformatf("OBJECTION DROPED"),UVM_LOW)
-//	 `uvm_info(get_type_name(),$sformatf("DRIVER 9"),UVM_LOW)
+	      start_item(req);	 
+	      finish_item(req);
+
+	      if(image < num_of_images)begin
+	         if(req.interrupt)begin
+	            req.interrupt = 0;
+	            image ++;	       	       
+	         end
+	         else begin
+	            `uvm_info(get_type_name(),
+			                $sformatf("req.address isL %b", req.address),
+			                UVM_HIGH)
+	            req.in_data = images_queue[image * 784 + req.address];
+	         end
+	      end
+	      else
+	        break;
+
+         
+	      start_item(req);
+	      finish_item(req);
       end // forever begin
       
    endtask : body 

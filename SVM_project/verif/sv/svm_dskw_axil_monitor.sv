@@ -46,13 +46,12 @@ class svm_dskw_axil_monitor extends uvm_monitor;
     endfunction : connect_phase
 
     task run_phase(uvm_phase phase);
-        // forever begin
-            // current_frame = svm_dskw_frame::type_id::create("current_frame", this);
-            // ...
-            // collect transactions
-            // ...
-            // item_collected_port.write(current_frame);
-        // end
+         forever begin
+            current_frame = axil_frame::type_id::create("current_frame", this);
+            @(posedge vif.clk)begin
+               item_collected_port.write(current_frame);
+            end
+         end
     endtask : run_phase
 
 endclass : svm_dskw_axil_monitor
