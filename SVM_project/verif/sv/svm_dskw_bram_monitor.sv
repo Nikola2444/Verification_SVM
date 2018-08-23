@@ -70,7 +70,6 @@ class svm_dskw_bram_monitor extends uvm_monitor;
 		            if(pixel_for_dskw < 784 && address < 784)begin
 		               #1;		     		     
 		               current_frame.image[address] =  vif.axi_in_data;		     
-	                  //	     `uvm_info(get_type_name(),$sformatf("image_for_dksw[%d]: %h ", address, vif.axi_in_data),UVM_LOW) 
 		               pixel_for_dskw ++;
 		            end
 
@@ -78,16 +77,15 @@ class svm_dskw_bram_monitor extends uvm_monitor;
 	            
 	         end
 	         @(posedge vif.axi_en)begin
-	            address = vif.axi_address;   
+	            address = vif.axi_address;
+               assert (address <= 1567)               
+               else
+                 `uvm_error(get_name(),$sformatf("address out of range: %d",address))
 	            //address = vif.axi_address;	    
 	            if(vif.axi_we == 4'b0011)begin
 		            if(deskewed_pixel < 784) begin
 		               deskewed_pixel ++;			     
-		               current_frame.image[address-784] = vif.axi_out_data;
-		               // `uvm_info(get_type_name(), $sformatf("deskew[%d]: %h",address - 784, current_frame.image[address-784] ), UVM_LOW);
-                     //		     if(address == 784 || address == 1567)
-                     //		       `uvm_info(get_type_name(), $sformatf("address is: %d \t axi_data:%h",address - 784, vif.axi_out_data ), UVM_LOW);
-
+		               current_frame.image[address-784] = vif.axi_out_data;		      
 		            end
 		            if(deskewed_pixel == 784)begin
 		               pixel_for_dskw = 0;

@@ -16,18 +16,22 @@ if [file exists work] {
 vlib work
 
 # compile DUT
-vlog -sv\
+vlog -cover bcs  -sv\
      +incdir+../../dut \
     ../../dut/Deskew_v1_0.v
 
+
+
 # compile testbench
-vlog -sv \
+vlog +cover -sv \
     +incdir+C:/questasim_10.0b/uvm-1.2/uvm-1.2/src \
     +incdir+../sv \
     ../sv/svm_dskw_verif_pkg.sv \
     ../sv/svm_dskw_verif_top.sv
+vopt svm_dskw_verif_top -o dut_optimized +cover
 
 # run simulation
-vsim svm_dskw_verif_top -novopt +UVM_TIMEOUT=200 +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_LOW  -sv_seed random -do "run -all"
+
+vsim -coverage dut_optimized  -novopt +UVM_TIMEOUT=200 +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_LOW -sv_seed random -do "run -all"
 
 do wave.do

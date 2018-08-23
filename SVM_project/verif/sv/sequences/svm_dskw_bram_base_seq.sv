@@ -22,7 +22,9 @@ class svm_dskw_bram_base_seq extends uvm_sequence#(bram_frame);
    int 		fd_img;
    string 	file_path = "../../images_for_deskew/y_bin.txt";
    int 		i = 0;
-   int 		num_of_images = 0;
+   rand bit[15:0] 		num_of_images;   
+
+
    
    function new(string name = "svm_dskw_bram_base_seq");
       super.new(name);

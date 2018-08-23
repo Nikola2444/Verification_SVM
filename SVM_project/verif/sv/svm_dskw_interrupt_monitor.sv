@@ -32,11 +32,18 @@ class svm_dskw_interrupt_monitor extends uvm_monitor;
    interrupt_frame current_frame;//here you will need dskw_frame insteade of svm_dskw_frame
 
    // coverage can go here
+   covergroup interrupt_cg;
+      option.per_instance = 1;
+      interrupt_cpt: coverpoint vif.done_interrupt{
+         bins interrupt_happened = {1};
+      }      
+   endgroup
    // ...
 
    function new(string name = "svm_dskw_interrupt_monitor", uvm_component parent = null);
       super.new(name,parent);
       item_collected_port = new("item_collected_port", this);
+      interrupt_cg = new();      
    endfunction
 
    function void connect_phase(uvm_phase phase);
@@ -56,7 +63,7 @@ class svm_dskw_interrupt_monitor extends uvm_monitor;
 	       `uvm_info(get_type_name(),
 			 $sformatf("INTERRUPT HAPPENED"),
 			 UVM_FULL)
-	       
+	       interrupt_cg.sample();          
 	       item_collected_port.write(current_frame);
 	    end
 	 end

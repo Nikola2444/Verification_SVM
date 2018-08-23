@@ -16,7 +16,7 @@ package svm_dskw_verif_pkg;
 
    import uvm_pkg::*;            // import the UVM library
  `include "uvm_macros.svh"     // Include the UVM macros
-
+   
  `include "svm_dskw_config.sv"
    // `include "seq_items/svm_dskw_frame.sv"
  `include "seq_items/axil_frame.sv"
@@ -25,6 +25,7 @@ package svm_dskw_verif_pkg;
  `include "seq_items/interrupt_frame.sv"
  `include "seq_items/image_transaction.sv"
    //`include "svm_dskw_driver.sv"
+
  `include "svm_dskw_bram_driver.sv"
  `include "svm_dskw_axis_driver.sv"
  `include "svm_dskw_axil_driver.sv"
@@ -41,13 +42,12 @@ package svm_dskw_verif_pkg;
  `include "svm_dskw_axil_agent.sv"
  `include "svm_dskw_interrupt_agent.sv"
  `include "svm_dskw_scoreboard.sv"
- `include "svm_dskw_coverage_collector.sv"
  `include "svm_dskw_env.sv"
 
  `include "sequences/svm_dskw_seq_lib.sv"
  `include "tests/test_lib.sv"
 
-     endpackage : svm_dskw_verif_pkg
+endpackage : svm_dskw_verif_pkg
 
  `include "svm_dskw_if.sv"
 
