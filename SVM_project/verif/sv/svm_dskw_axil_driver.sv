@@ -40,32 +40,32 @@ class svm_dskw_axil_driver extends uvm_driver#(axil_frame);
 	      
 	      @(posedge vif.clk)begin//writing using AXIL
 	         if(req.read_write)begin//read = 0, write = 1
-	            vif.s00_axi_awaddr = req.address;
-	            vif.s00_axi_awvalid = 1;
-	            vif.s00_axi_wdata = req.data;
-	            vif.s00_axi_wvalid = 1;
-	            vif.s00_axi_bready = 1'b1;	       
-	            wait(vif.s00_axi_awready && vif.s00_axi_wready);	       
-	            wait(vif.s00_axi_bvalid);
-	            vif.s00_axi_wdata = 0;
-	            vif.s00_axi_awvalid = 0; 
-	            vif.s00_axi_wvalid = 0;
-               wait(!vif.s00_axi_bvalid);	   
-	            vif.s00_axi_bready = 0;
+	            vif.s_axi_awaddr = req.address;
+	            vif.s_axi_awvalid = 1;
+	            vif.s_axi_wdata = req.data;
+	            vif.s_axi_wvalid = 1;
+	            vif.s_axi_bready = 1'b1;	       
+	            wait(vif.s_axi_awready && vif.s_axi_wready);	       
+	            wait(vif.s_axi_bvalid);
+	            vif.s_axi_wdata = 0;
+	            vif.s_axi_awvalid = 0; 
+	            vif.s_axi_wvalid = 0;
+               wait(!vif.s_axi_bvalid);	   
+	            vif.s_axi_bready = 0;
 	         end // if (req.read_write)
 	         else begin
-	            vif.s00_axi_araddr = req.address;
-               vif.s00_axi_arvalid = 1;
-               vif.s00_axi_rready = 1;
-	            wait(vif.s00_axi_arready);
-               wait(vif.s00_axi_rvalid);	           
-	            vif.s00_axi_arvalid = 0;
-               vif.s00_axi_araddr = 0;
-	            wait(!vif.s00_axi_rvalid);
-	            vif.s00_axi_rready = 0;	       
+	            vif.s_axi_araddr = req.address;
+               vif.s_axi_arvalid = 1;
+               vif.s_axi_rready = 1;
+	            wait(vif.s_axi_arready);
+               wait(vif.s_axi_rvalid);	           
+	            vif.s_axi_arvalid = 0;
+               vif.s_axi_araddr = 0;
+	            wait(!vif.s_axi_rvalid);
+	            vif.s_axi_rready = 0;	       
 	         end
 	         
-	      end // @ (posedge vif.s00_axi_aclk)
+	      end // @ (posedge vif.s_axi_aclk)
 	      
 	      //end of driving
          seq_item_port.item_done();

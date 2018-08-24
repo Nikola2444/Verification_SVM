@@ -38,7 +38,7 @@ class svm_dskw_axil_monitor extends uvm_monitor;
       write_address: coverpoint address{
          bins write_address_bin = {0};
       }
-      data_write_cpt: coverpoint vif.s00_axi_wdata {
+      data_write_cpt: coverpoint vif.s_axi_wdata {
          bins start_0 = {0};
          bins start_1 = {1};         
       }
@@ -50,7 +50,7 @@ class svm_dskw_axil_monitor extends uvm_monitor;
          bins start_address_bin = {0};
          bins ready_address_bin = {4};         
       }
-      data_read_cp: coverpoint vif.s00_axi_rdata{
+      data_read_cp: coverpoint vif.s_axi_rdata{
          bins data_bin_ready = {1};
          bins data_bin_not_ready = {0};
       }
@@ -80,16 +80,16 @@ class svm_dskw_axil_monitor extends uvm_monitor;
 
          current_frame = axil_frame::type_id::create("current_frame", this);
          @(posedge vif.clk)begin
-            if(vif.s00_axi_awready )begin
-//               `uvm_info(get_name(), $sformatf("write address: %d", vif.s00_axi_awaddr), UVM_LOW)
-               address = vif.s00_axi_awaddr;               
+            if(vif.s_axi_awready )begin
+//               `uvm_info(get_name(), $sformatf("write address: %d", vif.s_axi_awaddr), UVM_LOW)
+               address = vif.s_axi_awaddr;               
                write_address.sample();
             end
-            if(vif.s00_axi_arready)
-               address = vif.s00_axi_araddr;
-            if(vif.s00_axi_rvalid)begin
+            if(vif.s_axi_arready)
+               address = vif.s_axi_araddr;
+            if(vif.s_axi_rvalid)begin
                read_address.sample();
-  //             `uvm_info(get_name(), $sformatf("read address: %d \t read_data: %d", address, vif.s00_axi_rdata), UVM_LOW)               
+  //             `uvm_info(get_name(), $sformatf("read address: %d \t read_data: %d", address, vif.s_axi_rdata), UVM_LOW)               
             end
          end
       end
