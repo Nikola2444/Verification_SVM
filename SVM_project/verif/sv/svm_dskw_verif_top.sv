@@ -16,7 +16,7 @@ module svm_dskw_verif_top#
    )
    ();
    
-`define SVM_INSTANCE
+//`define SVM_DSKW
    import uvm_pkg::*;            // import the UVM library
 `include "uvm_macros.svh"     // Include the UVM macros
 
@@ -34,7 +34,7 @@ module svm_dskw_verif_top#
    
    
    // DUT
-`ifndef SVM_INSTANCE
+`ifndef SVM_DSKW
    Deskew_axi_v1_0 #
      (.WIDTH(16),
       .ADDRESS(1))
@@ -115,7 +115,7 @@ module svm_dskw_verif_top#
    initial begin
       set_global_timeout(0.3ms/1ps);
       uvm_config_db#(virtual axil_if)::set(null, "*", "axil_if", axil_vif);
-`ifndef SVM
+`ifndef SVM_DSKW
       uvm_config_db#(virtual bram_if)::set(null, "*", "bram_if", bram_vif);
 `else
       uvm_config_db#(virtual axis_if)::set(null, "*", "axis_if", axis_vif);

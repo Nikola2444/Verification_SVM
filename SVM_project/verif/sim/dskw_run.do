@@ -19,11 +19,6 @@ vlib work
 vlog -cover bcs  -sv\
      +incdir+../../dut/DESKEW_SRC \
     ../../dut/DESKEW_SRC/Deskew_v1_0.v
-vlog -cover bcs  -sv\
-     +incdir+../../dut/SVM_SRC \
-    ../../dut/SVM_SRC/SVM_IP_v1_0.v
-
-
 
 # compile testbench
 vlog +cover -sv \

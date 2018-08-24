@@ -14,7 +14,7 @@
 
 package svm_dskw_verif_pkg;
 
-   import uvm_pkg::*;            // import the UVM library
+ import uvm_pkg::*;            // import the UVM library
  `include "uvm_macros.svh"     // Include the UVM macros
    
  `include "svm_dskw_config.sv"
