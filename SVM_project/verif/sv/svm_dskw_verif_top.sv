@@ -16,7 +16,7 @@ module svm_dskw_verif_top#
    )
    ();
    
-//`define SVM_DSKW
+`define SVM_DSKW
    import uvm_pkg::*;            // import the UVM library
 `include "uvm_macros.svh"     // Include the UVM macros
 
@@ -113,7 +113,7 @@ module svm_dskw_verif_top#
 
 `endif
    initial begin
-      set_global_timeout(0.3ms/1ps);
+      set_global_timeout(10s/1ps);
       uvm_config_db#(virtual axil_if)::set(null, "*", "axil_if", axil_vif);
 `ifndef SVM_DSKW
       uvm_config_db#(virtual bram_if)::set(null, "*", "bram_if", bram_vif);

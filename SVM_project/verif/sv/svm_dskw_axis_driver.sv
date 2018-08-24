@@ -18,6 +18,7 @@ class svm_dskw_axis_driver extends uvm_driver#(axis_frame);
    uvm_analysis_imp_interrupt_done#(interrupt_frame, svm_dskw_axis_driver) port_interrupt_done;
    // The virtual interface used to drive and view HDL signals.
    virtual interface axis_if vif;
+   bit interrupt=0;
 
    function new(string name = "svm_dskw_axis_driver", uvm_component parent = null);
       super.new(name,parent);
@@ -31,20 +32,35 @@ class svm_dskw_axis_driver extends uvm_driver#(axis_frame);
    endfunction : connect_phase
 
    task run_phase(uvm_phase phase);
-      forever begin
+      forever 
+      begin
+         //@(posedge vif.clk)
+         `uvm_info(get_type_name(), $sformatf("Driver starting..."), UVM_HIGH)
+         while(!interrupt)
+         begin
+            @(posedge vif.clk);
+            vif.s_axis_tvalid=0;
+         end
+         interrupt=0;
+
          seq_item_port.get_next_item(req);
-         `uvm_info(get_type_name(),
-                   $sformatf("Driver sending...\n%s", req.sprint()),
-                   UVM_HIGH)
+         `uvm_info(get_type_name(), $sformatf("Driver sending...\n%s", req.sprint()), UVM_HIGH)
          // do actual driving here
+         foreach (req.dataQ[i])
+         begin
+            vif.s_axis_tvalid=1;
+            vif.s_axis_tdata=req.dataQ[i];
+            @(posedge vif.clk iff vif.s_axis_tready);
+            
+         end
          seq_item_port.item_done();
       end
    endtask : run_phase
    
    function write_interrupt_done (interrupt_frame tr);
       `uvm_info(get_type_name(),
-		$sformatf("INTERRUPT HAPPENED"),
-		UVM_HIGH)      
+		$sformatf("INTERRUPT HAPPENED"), UVM_HIGH)      
+      interrupt=1;
    endfunction : write_interrupt_done
    
 endclass : svm_dskw_axis_driver

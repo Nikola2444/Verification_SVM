@@ -9,7 +9,7 @@
 
  *******************************************************************************/
 
-//`define SVM_DSKW
+`define SVM_DSKW
 `ifndef SVM_DSKW_CONFIG_SV
  `define SVM_DSKW_CONFIG_SV
 typedef enum {WITH_BRAM, WITHOUT_BRAM} bram_cfg;
