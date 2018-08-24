@@ -66,8 +66,7 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
                end
 	         end
 	      end
-	      
-      end     
+	   end     
 
    endfunction : write_bram
 
@@ -88,7 +87,7 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
          // ++num_of_tr;
       end
    endfunction : write_axil
-
+   //write_interrupt function is not needed 
    function write_interrupt (interrupt_frame tr);
       interrupt_frame tr_clone;
       $cast(tr_clone, tr.clone()); 

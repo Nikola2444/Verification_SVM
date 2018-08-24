@@ -43,13 +43,13 @@ class svm_dskw_agent extends uvm_agent;
 
       if(cfg.is_bram == WITH_BRAM) begin
          bram_drv = svm_dskw_bram_driver::type_id::create("bram_drv", this);
-	 bram_seqr = bram_sequencer::type_id::create("bram_seqr", this);
-	 bram_mon = svm_dskw_bram_monitor::type_id::create("bram_monitor", this);
+	      bram_seqr = bram_sequencer::type_id::create("bram_seqr", this);
+	      bram_mon = svm_dskw_bram_monitor::type_id::create("bram_monitor", this);
       end
       if(cfg.is_axis == WITH_AXIS)begin
-	 axis_drv = svm_dskw_axis_driver::type_id::create("axis_drv", this);
-	 axis_seqr = axis_sequencer::type_id::create("axis_seqr", this);
-	 axis_mon = svm_dskw_axis_monitor::type_id::create("axis_monitor", this);
+	      axis_drv = svm_dskw_axis_driver::type_id::create("axis_drv", this);
+	      axis_seqr = axis_sequencer::type_id::create("axis_seqr", this);
+	      axis_mon = svm_dskw_axis_monitor::type_id::create("axis_monitor", this);
       end
 
    endfunction : build_phase
