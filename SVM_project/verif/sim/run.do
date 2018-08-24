@@ -28,7 +28,7 @@ vlog +cover -sv \
     +incdir+../sv \
     ../sv/svm_dskw_verif_pkg.sv \
     ../sv/svm_dskw_verif_top.sv
-vopt svm_dskw_verif_top -o dut_optimized +cover #this here is needed for coverage
+vopt svm_dskw_verif_top -o dut_optimized +cover 
 
 # run simulation
 
