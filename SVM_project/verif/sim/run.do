@@ -24,14 +24,14 @@ vlog -cover bcs  -sv\
 
 # compile testbench
 vlog +cover -sv \
-    +incdir+C:/questasim_10.0b/uvm-1.2/uvm-1.2/src \
+    +incdir+$env(UVM_HOME) \
     +incdir+../sv \
     ../sv/svm_dskw_verif_pkg.sv \
     ../sv/svm_dskw_verif_top.sv
-vopt svm_dskw_verif_top -o dut_optimized +cover
+vopt svm_dskw_verif_top -o dut_optimized +cover #this here is needed for coverage
 
 # run simulation
 
-vsim -coverage dut_optimized  -novopt +UVM_TIMEOUT=200 +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_LOW -sv_seed random -do "run -all"
+vsim -coverage dut_optimized  -novopt +UVM_TIMEOUT=200 +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_LOW -sv_seed 10 -do "run -all"
 
 do wave.do
