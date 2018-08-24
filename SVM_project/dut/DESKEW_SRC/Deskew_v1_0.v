@@ -1,9 +1,8 @@
 
 `timescale 1 ns / 1 ps
 `include "Deskew_v1_0_S00_AXI.v"
-`include "memory_submodul.sv"
 `include "Deskew.sv"
-
+`include "memory_submodul.sv"
 	module Deskew_axi_v1_0 #
 	(
 		// Users to add parameters here
@@ -112,7 +111,7 @@
 	       .we(we));
 	       
 	memory_submodul mem(.clk(s00_axi_aclk),
-	                 .reset(s00_axi_aresetn),
+	                    .reset(s00_axi_aresetn),
 	                 .cmd_wr_i(cmd),
 	                 .status_axi_o(status),
 	                 .start(start),
