@@ -20,7 +20,7 @@ class svm_dskw_bram_base_seq extends uvm_sequence#(bram_frame);
    logic [15:0] images_queue[$];
    logic [15:0] img;
    int 		fd_img;
-   string 	file_path = "../../images_for_deskew/y_bin.txt";
+   string 	file_path = "../..//images_for_deskew/y_bin.txt";
    int 		i = 0;
    rand bit[15:0] 		num_of_images;   
 
