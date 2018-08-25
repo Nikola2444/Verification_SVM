@@ -46,13 +46,17 @@ class svm_dskw_axis_monitor extends uvm_monitor;
     endfunction : connect_phase
 
     task run_phase(uvm_phase phase);
-        // forever begin
-            // current_frame = svm_dskw_frame::type_id::create("current_frame", this);
-            // ...
-            // collect transactions
-            // ...
-            // item_collected_port.write(current_frame);
-        // end
+
+         current_frame = axis_frame::type_id::create("current_frame", this);
+         forever begin
+            @(posedge vif.clk iff (vif.s_axis_tready && vif.s_axis_tvalid));
+            current_frame.dataQ.push_back(vif.s_axis_tdata);
+            if(vif.s_axis_tlast)
+            begin
+               item_collected_port.write(current_frame);
+               current_frame = axis_frame::type_id::create("current_frame", this);
+            end
+         end
     endtask : run_phase
 
 endclass : svm_dskw_axis_monitor

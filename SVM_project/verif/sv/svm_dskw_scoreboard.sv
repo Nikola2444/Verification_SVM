@@ -17,11 +17,21 @@
 `uvm_analysis_imp_decl(_interrupt)
 class svm_dskw_scoreboard extends uvm_scoreboard;
    
+   localparam bit[9:0] sv_array[0:9] = {10'd361, 10'd267, 10'd581, 10'd632, 10'd480, 10'd513, 10'd376, 10'd432, 10'd751, 10'd683};
+   localparam bit[9:0] IMG_LEN = 10'd784; 
    // control fileds
    bit checks_enable = 1;
    bit coverage_enable = 1;
    bit res_ready = 0;
    bit[3:0] result =0;
+   int img=0;
+   int core=0;
+   int sv=0;
+   int l=0;
+   logic[15 : 0] yQ[$];
+   logic[15 : 0] bQ[10];
+   logic[15 : 0] ltQ[10][$];
+   logic[15 : 0] svQ[10][$];
 
    // This TLM port is used to connect the scoreboard to the monitor
    uvm_analysis_imp_bram#(image_transaction, svm_dskw_scoreboard) port_bram;
@@ -75,9 +85,54 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
 
    function write_axis (axis_frame tr);
       axis_frame tr_clone;
-      $cast(tr_clone, tr.clone()); 
-      if(checks_enable) begin
-	      
+      //$cast(tr_clone, tr.clone()); 
+      if(checks_enable) 
+      begin
+	      `uvm_info(get_type_name(), $sformatf("transaction length: %d",tr.dataQ.size()), UVM_LOW);
+         if(img==0)
+         begin
+         `uvm_info(get_type_name(), $sformatf("Saving input image"), UVM_LOW);
+            clear_queues();
+            img=1;
+            foreach(tr.dataQ[i])
+               yQ.push_back(tr.dataQ[i]);
+         end
+         else if(core==10)
+         begin
+            `uvm_info(get_type_name(), $sformatf("Finished classifying img"), UVM_LOW);
+	         `uvm_info(get_type_name(), $sformatf("yQ length: %d",yQ.size()), UVM_LOW);
+	         `uvm_info(get_type_name(), $sformatf("svQ[0] %d",svQ[0].size()), UVM_LOW);
+	         `uvm_info(get_type_name(), $sformatf("ltQ[0] length: %d",ltQ[0].size()), UVM_LOW);
+	         `uvm_info(get_type_name(), $sformatf("svQ[9] %d",svQ[9].size()), UVM_LOW);
+	         `uvm_info(get_type_name(), $sformatf("ltQ[9] length: %d",ltQ[9].size()), UVM_LOW);
+            img=0;
+            core=0;
+         end
+         else if(sv==l)
+         begin
+            if(sv==sv_array[core])
+            begin
+               `uvm_info(get_type_name(), $sformatf("Saving bias %d",core), UVM_LOW);
+               bQ[core]=tr.dataQ[0];
+               core++;
+               sv=0;
+               l=0;
+            end
+            else if(sv<sv_array[core])
+            begin
+               `uvm_info(get_type_name(), $sformatf("Saving sv %d",sv), UVM_LOW);
+               foreach(tr.dataQ[i])
+                  svQ[core].push_back(tr.dataQ[i]);
+               sv++;
+            end
+         end
+         else if(sv>l)
+         begin
+            `uvm_info(get_type_name(), $sformatf("Saving lambda %d",l), UVM_LOW);
+            ltQ[core].push_back(tr.dataQ[0]);
+            l++;
+         end
+
       end
    endfunction : write_axis
 
@@ -90,11 +145,11 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
          else if(tr.address==8 && res_ready)
          begin
             res_ready=0;
-      /*      assert(tr.data==result)
+            assert(tr.data==result)
             else begin
                `uvm_error(get_type_name(), $sformatf("res mismatch reference model: %d \t svm: %d",
                result, tr.data));
-            end*/
+            end
          end
       end
    endfunction : write_axil
@@ -176,6 +231,19 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
          end // for (int y = 0; y<28; y++)
       end // for (int x=0; x<28; x++)
       
+   endfunction
+
+   function void clear_queues ();
+
+      int c=0;
+      yQ={};
+      for(int c=0; c<10; c++)
+      begin
+         bQ[c]=0;
+         ltQ[c]={};
+         svQ[c]={};   
+      end
+
    endfunction
 endclass : svm_dskw_scoreboard
 

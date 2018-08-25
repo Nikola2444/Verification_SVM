@@ -38,20 +38,25 @@ class svm_dskw_axis_driver extends uvm_driver#(axis_frame);
          `uvm_info(get_type_name(), $sformatf("Driver starting..."), UVM_HIGH)
          while(!interrupt)
          begin
-            @(posedge vif.clk);
+            @(negedge vif.clk);
+            vif.s_axis_tlast=0;
             vif.s_axis_tvalid=0;
          end
          interrupt=0;
 
          seq_item_port.get_next_item(req);
-         `uvm_info(get_type_name(), $sformatf("Driver sending...\n%s", req.sprint()), UVM_HIGH)
+         //`uvm_info(get_type_name(), $sformatf("Driver sending...\n%s", req.sprint()), UVM_HIGH)
          // do actual driving here
          foreach (req.dataQ[i])
          begin
+            #1 if(i==(req.dataQ.size-1))
+               vif.s_axis_tlast=1;
+            else
+               vif.s_axis_tlast=0;
+
             vif.s_axis_tvalid=1;
             vif.s_axis_tdata=req.dataQ[i];
             @(posedge vif.clk iff vif.s_axis_tready);
-            
          end
          seq_item_port.item_done();
       end
