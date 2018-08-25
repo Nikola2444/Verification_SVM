@@ -89,6 +89,10 @@ class svm_dskw_axil_monitor extends uvm_monitor;
                address = vif.s_axi_araddr;
             if(vif.s_axi_rvalid)begin
                read_address.sample();
+               current_frame.data = vif.s_axi_rdata;
+               current_frame.address = address;
+               item_collected_port.write(current_frame);
+
   //             `uvm_info(get_name(), $sformatf("read address: %d \t read_data: %d", address, vif.s_axi_rdata), UVM_LOW)               
             end
          end

@@ -20,6 +20,8 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
    // control fileds
    bit checks_enable = 1;
    bit coverage_enable = 1;
+   bit res_ready = 0;
+   bit[3:0] result =0;
 
    // This TLM port is used to connect the scoreboard to the monitor
    uvm_analysis_imp_bram#(image_transaction, svm_dskw_scoreboard) port_bram;
@@ -62,7 +64,8 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
 //               `uvm_info(get_type_name(), $sformatf("reference modele[%d]: %h \t deskew[%d]: %h", i, reference_model_image[i], i,tr_clone.image[i] ), UVM_LOW);
 	            assert (tr_clone.image[i] == reference_model_image[i])
                else begin
-                  `uvm_info(get_type_name(), $sformatf("pixel mismatch reference modele[%d]: %h \t deskew[%d]: %h", i, reference_model_image[i], i,tr.image[i] ), UVM_LOW);
+                  `uvm_error(get_type_name(), $sformatf("pixel mismatch reference modele[%d]: %h \t deskew[%d]: %h",
+                  i, reference_model_image[i], i,tr.image[i] ));
                end
 	         end
 	      end
@@ -80,13 +83,22 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
 
    function write_axil (axil_frame tr);
       axil_frame tr_clone;
-      $cast(tr_clone, tr.clone()); 
+      //$cast(tr_clone, tr.clone()); 
       if(checks_enable) begin
-         // do actual checking here
-         // ...
-         // ++num_of_tr;
+         if(tr.address==4 && tr.data==1)
+            res_ready=1;
+         else if(tr.address==8 && res_ready)
+         begin
+            res_ready=0;
+            assert(tr.data==result)
+            else begin
+               `uvm_error(get_type_name(), $sformatf("res mismatch reference model: %d \t svm: %d",
+               result, tr.data));
+            end
+         end
       end
    endfunction : write_axil
+
    //write_interrupt function is not needed 
    function write_interrupt (interrupt_frame tr);
       interrupt_frame tr_clone;
