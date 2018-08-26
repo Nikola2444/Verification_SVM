@@ -276,7 +276,7 @@ module SVM#
                end
                else
                begin
-                  if($signed(acc_next)>$signed(res_reg))
+                  if($signed(acc_next[19:4])>$signed(res_reg))//  bilo: if($signed(acc_next)>$signed(res_reg))
                   begin
                      res_next=acc_next[19:4]; 
                      num_next=core_reg;
