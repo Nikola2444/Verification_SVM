@@ -22,7 +22,7 @@ class svm_dskw_axis_seq extends svm_dskw_axis_base_seq;
 
    virtual task body();
       `uvm_info(get_type_name(), $sformatf("Sequence starting..."), UVM_HIGH)
-      for(image=0; image<10; image++)
+      for(image=0; image<1; image++)
       begin
          `uvm_info(get_type_name(), $sformatf("Sending %d image",image), UVM_HIGH);
          req=axis_frame::type_id::create("req");

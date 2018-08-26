@@ -88,39 +88,41 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
       //$cast(tr_clone, tr.clone()); 
       if(checks_enable) 
       begin
-	      `uvm_info(get_type_name(), $sformatf("transaction length: %d",tr.dataQ.size()), UVM_LOW);
+	      //`uvm_info(get_type_name(), $sformatf("transaction length: %d",tr.dataQ.size()), UVM_LOW);
          if(img==0)
          begin
-         `uvm_info(get_type_name(), $sformatf("Saving input image"), UVM_LOW);
+         //`uvm_info(get_type_name(), $sformatf("Saving input image"), UVM_LOW);
             clear_queues();
             img=1;
             foreach(tr.dataQ[i])
                yQ.push_back(tr.dataQ[i]);
          end
-         else if(core==10)
-         begin
-            `uvm_info(get_type_name(), $sformatf("Finished classifying img"), UVM_LOW);
-	         `uvm_info(get_type_name(), $sformatf("yQ length: %d",yQ.size()), UVM_LOW);
-	         `uvm_info(get_type_name(), $sformatf("svQ[0] %d",svQ[0].size()), UVM_LOW);
-	         `uvm_info(get_type_name(), $sformatf("ltQ[0] length: %d",ltQ[0].size()), UVM_LOW);
-	         `uvm_info(get_type_name(), $sformatf("svQ[9] %d",svQ[9].size()), UVM_LOW);
-	         `uvm_info(get_type_name(), $sformatf("ltQ[9] length: %d",ltQ[9].size()), UVM_LOW);
-            img=0;
-            core=0;
-         end
          else if(sv==l)
          begin
             if(sv==sv_array[core])
             begin
-               `uvm_info(get_type_name(), $sformatf("Saving bias %d",core), UVM_LOW);
+               //`uvm_info(get_type_name(), $sformatf("Saving bias %d",core), UVM_LOW);
                bQ[core]=tr.dataQ[0];
                core++;
                sv=0;
                l=0;
+               if(core==10)
+               begin
+                  `uvm_info(get_type_name(), $sformatf("Finished classifying img"), UVM_LOW);
+                  calc_res();
+                  //`uvm_info(get_type_name(), $sformatf("yQ length: %d",yQ.size()), UVM_LOW);
+                  //`uvm_info(get_type_name(), $sformatf("svQ[0] %d",svQ[0].size()), UVM_LOW);
+                  //`uvm_info(get_type_name(), $sformatf("ltQ[0] length: %d",ltQ[0].size()), UVM_LOW);
+                  //`uvm_info(get_type_name(), $sformatf("svQ[9] %d",svQ[9].size()), UVM_LOW);
+                  //`uvm_info(get_type_name(), $sformatf("ltQ[9] length: %d",ltQ[9].size()), UVM_LOW);
+                  `uvm_info(get_type_name(), $sformatf("Classified number is: %d",result), UVM_LOW);
+                  img=0;
+                  core=0;
+               end
             end
             else if(sv<sv_array[core])
             begin
-               `uvm_info(get_type_name(), $sformatf("Saving sv %d",sv), UVM_LOW);
+               //`uvm_info(get_type_name(), $sformatf("Saving sv %d",sv), UVM_LOW);
                foreach(tr.dataQ[i])
                   svQ[core].push_back(tr.dataQ[i]);
                sv++;
@@ -128,7 +130,7 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
          end
          else if(sv>l)
          begin
-            `uvm_info(get_type_name(), $sformatf("Saving lambda %d",l), UVM_LOW);
+            //`uvm_info(get_type_name(), $sformatf("Saving lambda %d",l), UVM_LOW);
             ltQ[core].push_back(tr.dataQ[0]);
             l++;
          end
@@ -138,16 +140,22 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
 
    function write_axil (axil_frame tr);
       axil_frame tr_clone;
+      //`uvm_info(get_type_name(), $sformatf("AXIL: %d",tr.address), UVM_LOW);
       //$cast(tr_clone, tr.clone()); 
       if(checks_enable) begin
          if(tr.address==4 && tr.data==1)
+         begin
+            //`uvm_info(get_type_name(), $sformatf("AXIL: A:%d  D:%d",tr.address,tr.data), UVM_LOW);
             res_ready=1;
+         end
          else if(tr.address==8 && res_ready)
          begin
+            //`uvm_info(get_type_name(), $sformatf("AXIL: A:%d  D:%d",tr.address,tr.data), UVM_LOW);
             res_ready=0;
             assert(tr.data==result)
-            else begin
-               `uvm_error(get_type_name(), $sformatf("res mismatch reference model: %d \t svm: %d",
+            else 
+            begin
+               `uvm_error(get_type_name(), $sformatf("res mismatch, reference model: %d \t svm: %d",
                result, tr.data));
             end
          end
@@ -234,7 +242,6 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
    endfunction
 
    function void clear_queues ();
-
       int c=0;
       yQ={};
       for(int c=0; c<10; c++)
@@ -243,8 +250,68 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
          ltQ[c]={};
          svQ[c]={};   
       end
-
    endfunction
+
+   function void calc_res ();
+
+      bit [27 : 0] p=0;
+      bit [27 : 0] acc=0;
+      bit [15 : 0] max_res=0;
+      bit [15 : 0] resQ [10];
+      bit [3  : 0] cl_num=0;
+
+      bit [31 : 0] i1_tmp=0;		
+      bit [31 : 0] i2_tmp=0;		
+      bit [84 : 0] i2_tmp1=0;		
+      bit [44 : 0] l_tmp=0;		
+
+
+      for(int j=0; j<10; j++)
+         resQ[j]=0;
+
+      for(int core=0; core<10; core++)
+      begin
+         acc=0;
+         for( int sv=0; sv<sv_array[core]; sv++)
+         begin
+            p=28'h0004000;
+            for( int i=0; i<IMG_LEN; i++)
+            begin
+               i1_tmp=(yQ[i]*svQ[core][sv*IMG_LEN+i]);
+               p=p+i1_tmp[29:14];
+            end
+            //scale
+            i2_tmp=p/10;
+            i2_tmp1=i2_tmp*i2_tmp*i2_tmp;
+            p=i2_tmp1[55:28];
+            //lambda
+            l_tmp=$signed(p)*$signed(ltQ[core][sv]);
+            p=l_tmp[41:14];
+            acc=$signed(acc)+$signed(p);
+         end
+         //bias
+         acc=$signed(acc)+$signed(bQ[core]);
+         resQ[core]=acc[19:4];
+      end
+
+      //find best result
+      max_res=resQ[0];
+      cl_num=0;
+      for(int i=1; i<10; i++)
+      begin
+         `uvm_info(get_type_name(), $sformatf("Res for core %d is: %h",i,resQ[i]), UVM_LOW);
+         if(max_res<resQ[i])
+         begin
+            max_res=resQ[i];
+            cl_num=i;
+	         `uvm_info(get_type_name(), $sformatf("New cl_num: %d",cl_num), UVM_LOW);
+         end
+      end
+
+      //finished
+      result=cl_num;
+   endfunction
+
 endclass : svm_dskw_scoreboard
 
 `endif

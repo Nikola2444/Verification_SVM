@@ -35,7 +35,7 @@ class svm_dskw_axis_driver extends uvm_driver#(axis_frame);
       forever 
       begin
          //@(posedge vif.clk)
-         `uvm_info(get_type_name(), $sformatf("Driver starting..."), UVM_HIGH)
+         //`uvm_info(get_type_name(), $sformatf("Driver starting..."), UVM_HIGH)
          while(!interrupt)
          begin
             @(negedge vif.clk);
@@ -63,8 +63,7 @@ class svm_dskw_axis_driver extends uvm_driver#(axis_frame);
    endtask : run_phase
    
    function write_interrupt_done (interrupt_frame tr);
-      `uvm_info(get_type_name(),
-		$sformatf("INTERRUPT HAPPENED"), UVM_HIGH)      
+      //`uvm_info(get_type_name(), $sformatf("INTERRUPT HAPPENED"), UVM_HIGH)      
       interrupt=1;
    endfunction : write_interrupt_done
    
