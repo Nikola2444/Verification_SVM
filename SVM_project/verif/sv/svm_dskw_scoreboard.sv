@@ -286,10 +286,10 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
       //find best result
       max_res=resQ[0];
       cl_num=0;
-      `uvm_info(get_type_name(), $sformatf("Res for core 0 is: %h",resQ[0]), UVM_LOW);
+      `uvm_info(get_type_name(), $sformatf("Res for core 0 is: %h",resQ[0]), UVM_MEDIUM);
       for(int i=1; i<10; i++)
       begin
-         `uvm_info(get_type_name(), $sformatf("Res for core %d is: %h",i,resQ[i]), UVM_LOW);
+         `uvm_info(get_type_name(), $sformatf("Res for core %d is: %h",i,resQ[i]), UVM_MEDIUM);
          if($signed(max_res)<$signed(resQ[i]))
          begin
             max_res=resQ[i];

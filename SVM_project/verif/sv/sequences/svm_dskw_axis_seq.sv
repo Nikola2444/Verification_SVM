@@ -34,7 +34,7 @@ class svm_dskw_axis_seq extends svm_dskw_axis_base_seq;
          for(core=0; core<10; core++)
          begin
 
-            `uvm_info(get_type_name(), $sformatf("Core %d calculating",core), UVM_HIGH);
+            `uvm_info(get_type_name(), $sformatf("Core %d calculating",core), UVM_NONE);
             for(sv=0; sv<sv_array[core]; sv++)
             begin
                //send support vector

@@ -34,6 +34,7 @@ class dskw_axil_seq extends svm_dskw_axil_base_seq;
        //random reading from deskew
        `uvm_do_with(req, {req.read_write == 0; req.data == 1; req.address == 4;});
        `uvm_do_with(req, {req.read_write == 0; req.data == 1; req.address == 0;});
+       `uvm_info(get_name(),$sformatf("Image num is being deskewed: %d", image + 1), UVM_NONE)
        forever begin
           //check if deksew is ready
           `uvm_do_with(req, {req.read_write == 0; req.data == 1; req.address == 4;});
@@ -42,6 +43,7 @@ class dskw_axil_seq extends svm_dskw_axil_base_seq;
              if(image == num_of_images)
                break;
              //start deskew
+             `uvm_info(get_type_name(), $sformatf("image %d is being classified ",image+1), UVM_NONE);
              `uvm_do_with(req, {req.read_write == 1; req.data == 1; req.address == 0;});
              `uvm_do_with(req, {req.read_write == 1; req.data == 0; req.address == 0;});
           end

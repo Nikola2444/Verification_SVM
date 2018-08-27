@@ -26,7 +26,7 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
       read_deskew_images();
       
       req = bram_frame::type_id::create("req");                   
-      `uvm_info(get_name(),$sformatf("Image num: %d", image + 1), UVM_NONE)
+      //`uvm_info(get_name(),$sformatf("Image num: %d", image + 1), UVM_NONE)
       forever begin
          
 	      start_item(req);	 
@@ -36,8 +36,8 @@ class svm_dskw_bram_seq extends svm_dskw_bram_base_seq;
 	         if(req.interrupt)begin
 	            req.interrupt = 0;               
 	            image ++;
-               if(image != num_of_images)
-                 `uvm_info(get_name(),$sformatf("Image num: %d", image + 1), UVM_NONE)
+//               if(image != num_of_images)
+                 //`uvm_info(get_name(),$sformatf("Image num: %d", image + 1), UVM_NONE)
 	         end
 	         else begin
 	            req.in_data = images_queue[image * 784 + req.address];
