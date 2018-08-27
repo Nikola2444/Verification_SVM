@@ -16,7 +16,7 @@ class svm_axil_seq extends svm_dskw_axil_base_seq;
    int num_of_images = 0;
    int image = 0;   
     `uvm_object_utils (svm_axil_seq)
-   int i = 1;   
+
     function new(string name = "svm_axil_seq");
         super.new(name);
     endfunction
@@ -25,14 +25,17 @@ class svm_axil_seq extends svm_dskw_axil_base_seq;
         // axil example - just send one item\
        assert(std::randomize(num_of_images) with {num_of_images > 0; num_of_images <= 10;});
        
-       `uvm_info(get_type_name(), $sformatf("%d images are beinge classified ",num_of_images), UVM_NONE);
+       `uvm_info(get_type_name(), $sformatf("%d images are being classified ",num_of_images), UVM_NONE);
+       //random reading from SVM
        `uvm_do_with(req, {req.read_write == 0; req.data == 1; req.address == 4;});
        `uvm_do_with(req, {req.read_write == 0; req.data == 1; req.address == 0;});
+       //start SVM
        `uvm_do_with(req, {req.read_write == 1; req.data == 1; req.address == 0;});
        `uvm_do_with(req, {req.read_write == 1; req.data == 0; req.address == 0;});
-       //`uvm_do_with(req, {req.read_write == 1; req.data == 1; req.address == 0;});       
+       //random reading from deskew
        `uvm_do_with(req, {req.read_write == 0; req.data == 0; req.address == 4;});
        `uvm_do_with(req, {req.read_write == 0; req.data == 0; req.address == 0;});
+       `uvm_info(get_type_name(), $sformatf("image %d is being classified ",image), UVM_NONE);
        forever begin
           `uvm_do_with(req, {req.read_write == 0; req.data == 1; req.address == 4;});
           if(req.data == 1)begin
@@ -40,6 +43,8 @@ class svm_axil_seq extends svm_dskw_axil_base_seq;
              image ++;             
              if(image == num_of_images)
                break;
+             `uvm_info(get_type_name(), $sformatf("image %d is being classified ",image), UVM_NONE);
+             //start SVM
              `uvm_do_with(req, {req.read_write == 1; req.data == 1; req.address == 0;});
              `uvm_do_with(req, {req.read_write == 1; req.data == 0; req.address == 0;});
           end

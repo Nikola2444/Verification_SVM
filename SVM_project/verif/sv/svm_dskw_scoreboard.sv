@@ -33,6 +33,7 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
    logic[15 : 0] ltQ[10][$];
    logic[15 : 0] svQ[10][$];
 
+   int           num_of_assertions = 0;   
    // This TLM port is used to connect the scoreboard to the monitor
    uvm_analysis_imp_bram#(image_transaction, svm_dskw_scoreboard) port_bram;
    uvm_analysis_imp_axis#(axis_frame, svm_dskw_scoreboard) port_axis;
@@ -56,6 +57,8 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
    
    function void report_phase(uvm_phase phase);
       `uvm_info(get_type_name(), $sformatf("Svm_dskw scoreboard examined: %0d transactions", num_of_tr), UVM_LOW);
+      `uvm_info(get_type_name(), $sformatf("Number of mismatch assertions for DUT is: %0d ", num_of_assertions), UVM_NONE);
+      
    endfunction : report_phase
 
 
@@ -71,11 +74,11 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
             end
 	      else begin
 	         for(int i  = 0; i < 784; i++)begin
-//               `uvm_info(get_type_name(), $sformatf("reference modele[%d]: %h \t deskew[%d]: %h", i, reference_model_image[i], i,tr_clone.image[i] ), UVM_LOW);
 	            assert (tr_clone.image[i] == reference_model_image[i])
                else begin
                   `uvm_error(get_type_name(), $sformatf("pixel mismatch reference modele[%d]: %h \t deskew[%d]: %h",
                   i, reference_model_image[i], i,tr.image[i] ));
+                  num_of_assertions++;                  
                end
 	         end
 	      end
@@ -85,13 +88,10 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
 
    function write_axis (axis_frame tr);
       axis_frame tr_clone;
-      //$cast(tr_clone, tr.clone()); 
       if(checks_enable) 
       begin
-	      //`uvm_info(get_type_name(), $sformatf("transaction length: %d",tr.dataQ.size()), UVM_LOW);
          if(img==0)
          begin
-         //`uvm_info(get_type_name(), $sformatf("Saving input image"), UVM_LOW);
             clear_queues();
             img=1;
             foreach(tr.dataQ[i])
@@ -101,7 +101,7 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
          begin
             if(sv==sv_array[core])
             begin
-               //`uvm_info(get_type_name(), $sformatf("Saving bias %d",core), UVM_LOW);
+              
                bQ[core]=tr.dataQ[0];
                core++;
                sv=0;
@@ -110,11 +110,6 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
                begin
                   `uvm_info(get_type_name(), $sformatf("Finished classifying img"), UVM_LOW);
                   calc_res();
-                  //`uvm_info(get_type_name(), $sformatf("yQ length: %d",yQ.size()), UVM_LOW);
-                  //`uvm_info(get_type_name(), $sformatf("svQ[0] %d",svQ[0].size()), UVM_LOW);
-                  //`uvm_info(get_type_name(), $sformatf("ltQ[0] length: %d",ltQ[0].size()), UVM_LOW);
-                  //`uvm_info(get_type_name(), $sformatf("svQ[9] %d",svQ[9].size()), UVM_LOW);
-                  //`uvm_info(get_type_name(), $sformatf("ltQ[9] length: %d",ltQ[9].size()), UVM_LOW);
                   `uvm_info(get_type_name(), $sformatf("Classified number is: %d",result), UVM_LOW);
                   img=0;
                   core=0;
@@ -122,7 +117,6 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
             end
             else if(sv<sv_array[core])
             begin
-               //`uvm_info(get_type_name(), $sformatf("Saving sv %d",sv), UVM_LOW);
                foreach(tr.dataQ[i])
                   svQ[core].push_back(tr.dataQ[i]);
                sv++;
@@ -130,7 +124,6 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
          end
          else if(sv>l)
          begin
-            //`uvm_info(get_type_name(), $sformatf("Saving lambda %d",l), UVM_LOW);
             ltQ[core].push_back(tr.dataQ[0]);
             l++;
          end
@@ -140,23 +133,20 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
 
    function write_axil (axil_frame tr);
       axil_frame tr_clone;
-      //`uvm_info(get_type_name(), $sformatf("AXIL: %d",tr.address), UVM_LOW);
-      //$cast(tr_clone, tr.clone()); 
       if(checks_enable) begin
          if(tr.address==4 && tr.data==1)
          begin
-            //`uvm_info(get_type_name(), $sformatf("AXIL: A:%d  D:%d",tr.address,tr.data), UVM_LOW);
             res_ready=1;
          end
          else if(tr.address==8 && res_ready)
          begin
-            //`uvm_info(get_type_name(), $sformatf("AXIL: A:%d  D:%d",tr.address,tr.data), UVM_LOW);
             res_ready=0;
             assert(tr.data==result)
             else 
             begin
                `uvm_error(get_type_name(), $sformatf("res mismatch, reference model: %d \t svm: %d",
                result, tr.data));
+               num_of_assertions++;               
             end
          end
       end
@@ -185,7 +175,6 @@ class svm_dskw_scoreboard extends uvm_scoreboard;
       
       for (int i = 0; i<784; i++)begin
 	      image[i] = tr.image[i][15:0];
-	      //`uvm_info(get_type_name(), $sformatf("deskewed_pixel[%d]: %h", i, image[i]), UVM_LOW);
       end 
       for (x=0; x<28; x++)begin
 	      for(y = 0; y<28; y++)begin      

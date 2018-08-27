@@ -92,7 +92,7 @@ class svm_dskw_bram_monitor extends uvm_monitor;
 		               deskewed_pixel = 0;
 		               current_frame.image_deskewed = 1;
 		               item_collected_port.write(current_frame);
-		               `uvm_info(get_type_name(),$sformatf("---------------IMAGE DESKEWED--------------------------------------"),UVM_LOW)
+		               `uvm_info(get_type_name(),$sformatf("---------------IMAGE DESKEWED--------------------------------------"),UVM_NONE)
 		               current_frame = image_transaction::type_id::create("current_frame", this);
 		            end                  
 	            end // if (vif.axi_we == 4'b0011)
