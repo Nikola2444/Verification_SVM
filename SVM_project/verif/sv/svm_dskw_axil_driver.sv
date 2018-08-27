@@ -62,6 +62,7 @@ class svm_dskw_axil_driver extends uvm_driver#(axil_frame);
 	            vif.s_axi_arvalid = 0;
                vif.s_axi_araddr = 0;
 	            wait(!vif.s_axi_rvalid);
+               req.data = vif.s_axi_rdata;               
 	            vif.s_axi_rready = 0;	       
 	         end
 	         

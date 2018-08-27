@@ -32,6 +32,6 @@ vopt svm_dskw_verif_top -o dut_optimized +cover
 
 # run simulation
 
-vsim -coverage dut_optimized  -novopt +UVM_TIMEOUT=200 +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_HIGH -sv_seed 10 
+vsim -coverage dut_optimized  -novopt +UVM_TIMEOUT=200 +UVM_TESTNAME=test_svm_dskw_simple_2 +UVM_VERBOSITY=UVM_NONE -sv_seed random 
 
 do wave_svm.do
